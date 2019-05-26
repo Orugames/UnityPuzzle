@@ -6,7 +6,7 @@ using TMPro;
 [ExecuteInEditMode]
 public class GridCubeLogic : MonoBehaviour
 {
-    public TextMeshPro text;
+    public TextMeshPro posText;
 
     public int x;
     public int y;
@@ -27,7 +27,8 @@ public class GridCubeLogic : MonoBehaviour
         init = false;
         x = (int)transform.position.x;
         y = (int)transform.position.y;
-        text.text = x.ToString() + "," + y.ToString();
-        name = text.text;
+        posText.text = x.ToString() + "," + y.ToString();
+        posText.name = x.ToString() + "," + y.ToString();
+        name = "Cubeside " + posText.text;
     }
 }

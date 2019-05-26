@@ -23,10 +23,11 @@ public class LevelEditor : MonoBehaviour
     
     public void OnMouseDown()
     {
-      
+      if (Input.GetMouseButtonDown(0)) {
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out hit))
             {
                 Vector3 point2 = hit.point;
                 GameObject newPrefab = Instantiate(prefab);
@@ -38,10 +39,8 @@ public class LevelEditor : MonoBehaviour
                 newPrefab.transform.position = rounded;
                 newPrefab.GetComponent<GridCubeLogic>().Initialize();
             }
-        
-
+        }
+            
     }
-
-    
 
 }
