@@ -6,6 +6,7 @@ using TMPro;
 public class CubeSide : MonoBehaviour
 {
     public int number = 0;
+    public int oposedNumber = 0;
     public List<Cube> cubeParents = new List<Cube>();
     public GameObject oposedSideGO;
     public CubeSide oposedSide;
@@ -43,6 +44,7 @@ public class CubeSide : MonoBehaviour
                     number += 1;
                     if (number > 6) number = 0;
                     numberText.text = number.ToString();
+                    oposedNumber = oposedSide.number;
                 }
             }
         }
