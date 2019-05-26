@@ -468,26 +468,51 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5243332245870915179, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 1448799547460562129, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2657938655860719083, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 8664292667460812625, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1783243951483911472, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 4927078229993422730, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6935435489571801820, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 4386709118510827622, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1062879656173853643, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5917516660446976369, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh
@@ -498,6 +523,11 @@ PrefabInstance:
       propertyPath: oposedSide
       value: 
       objectReference: {fileID: 1220381496775010672}
+    - target: {fileID: 7096066594359691391, guid: 1b471cc4cb8d187429371da54438a17b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 4514136926039427781, guid: 1b471cc4cb8d187429371da54438a17b,
         type: 3}
       propertyPath: m_Mesh

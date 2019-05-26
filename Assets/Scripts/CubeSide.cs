@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class CubeSide : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class CubeSide : MonoBehaviour
     public List<Cube> cubeParents = new List<Cube>();
     public GameObject oposedSideGO;
     public CubeSide oposedSide;
+    public GameObject MarkerGO;
+    public Renderer MarkerGORenderer;
     public TextMeshPro numberText;
     public Vector2 position;
 
@@ -31,6 +34,31 @@ public class CubeSide : MonoBehaviour
     {
 
     }
+    void UpdateSide()
+    {
+        position = transform.position;
+        oposedNumber = oposedSide.number;
+        numberText.text = number.ToString();
+        oposedNumber = oposedSide.number;
+        UpdateMarker();
+    }
+
+    private void UpdateMarker()
+    {
+        foreach (Cube parentCube in cubeParents)
+        {
+            if (!parentCube.cubeCompleted || cubeParents == null)
+            {
+                MarkerGORenderer.material.color = Color.red;
+            }
+            else
+            {
+                MarkerGORenderer.material.color = Color.green;
+
+            }
+        }
+    }
+
     private void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(0))
