@@ -952,7 +952,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 78475108}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1056921494}
+        m_MethodName: TransformCube
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &78475108
@@ -2829,7 +2840,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -79.06778, y: -70.28241}
+  m_AnchoredPosition: {x: -79.06787, y: -70.28241}
   m_SizeDelta: {x: 100.6, y: 100.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &622202935
@@ -3475,7 +3486,7 @@ GameObject:
   - component: {fileID: 1056921490}
   - component: {fileID: 1056921494}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: LevelEditor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3589,6 +3600,10 @@ MonoBehaviour:
   cube20: {fileID: 3784530686367965314, guid: 18ded9631de168f4a8fe013b4f5d2280, type: 3}
   modifyValues: 0
   prefabPicked: 0
+  prefabTransform: 0
+  prefabReadyToTransform: 0
+  prefabRotate: 0
+  prefabReadyToRotate: 0
 --- !u!1 &1068850265
 GameObject:
   m_ObjectHideFlags: 0
@@ -3827,7 +3842,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1236256215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1056921494}
+        m_MethodName: RotateCube
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1236256215
@@ -5745,6 +5771,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891220026}
   m_CullTransparentMesh: 0
+--- !u!1 &2069418691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2069418692}
+  m_Layer: 0
+  m_Name: CubeContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2069418692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069418691}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2104575171
 GameObject:
   m_ObjectHideFlags: 0

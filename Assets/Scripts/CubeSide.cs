@@ -15,8 +15,9 @@ public class CubeSide : MonoBehaviour
     public Renderer MarkerGORenderer;
     public TextMeshPro numberText;
     public Vector2 position;
-
+    public Color cubeSideColor;
     public bool fixedNumber;
+    public bool modifyValues;
 
 
     private void Reset()
@@ -34,8 +35,9 @@ public class CubeSide : MonoBehaviour
     {
 
     }
-    void UpdateSide()
+    public void UpdateSide()
     {
+        GetComponent<Renderer>().material.color = cubeSideColor;
         position = transform.position;
         oposedNumber = oposedSide.number;
         numberText.text = number.ToString();
@@ -43,7 +45,7 @@ public class CubeSide : MonoBehaviour
         UpdateMarker();
     }
 
-    private void UpdateMarker()
+    void UpdateMarker()
     {
         foreach (Cube parentCube in cubeParents)
         {

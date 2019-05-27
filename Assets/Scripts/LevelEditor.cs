@@ -7,32 +7,36 @@ public class LevelEditor : MonoBehaviour
 {
     float gridSize = 1;
 
-    public  GameObject prefab;
-    public  GameObject cube1;
-    public  GameObject cube2;
-    public  GameObject cube3;
-    public  GameObject cube4;
-    public  GameObject cube5;
-    public  GameObject cube6;
-    public  GameObject cube7;
-    public  GameObject cube8;
-    public  GameObject cube9;
-    public  GameObject cube10;
-    public  GameObject cube11;
-    public  GameObject cube12;
-    public  GameObject cube13;
-    public  GameObject cube14;
-    public  GameObject cube15;
-    public  GameObject cube16;
-    public  GameObject cube17;
-    public  GameObject cube18;
-    public  GameObject cube19;
-    public  GameObject cube20;
+    public GameObject cubeContainer;
+    public GameObject prefab;
+    public GameObject cube1;
+    public GameObject cube2;
+    public GameObject cube3;
+    public GameObject cube4;
+    public GameObject cube5;
+    public GameObject cube6;
+    public GameObject cube7;
+    public GameObject cube8;
+    public GameObject cube9;
+    public GameObject cube10;
+    public GameObject cube11;
+    public GameObject cube12;
+    public GameObject cube13;
+    public GameObject cube14;
+    public GameObject cube15;
+    public GameObject cube16;
+    public GameObject cube17;
+    public GameObject cube18;
+    public GameObject cube19;
+    public GameObject cube20;
+    GameObject cubeSelected;
 
     public bool modifyValues;
     public bool prefabPicked;
     public bool prefabTransform;
+    public bool prefabReadyToTransform;
     public bool prefabRotate;
+    public bool prefabReadyToRotate;
 
     void Start()
     {
@@ -42,16 +46,16 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        OnMouseDown();
     }
-    
+
     public void OnMouseDown()
     {
-        if (!prefabPicked)
+        if (!prefabPicked && !prefabTransform && !prefabRotate)
         {
 
         }
-        else //prefabReadyToPick
+        else if (prefabPicked)
         {
             if (prefab == null)
             {
@@ -77,11 +81,89 @@ public class LevelEditor : MonoBehaviour
 
         }
 
+        if (prefabTransform) //Pushed the button to transform, ready to pick a cube
+        {
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!prefabReadyToTransform) //input to select a cube
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.name is "LevelEditor")
+                        {
+                            return;
+                        }
+                        cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                        Debug.Log(cubeSelected.name);
+                        /*Vector3 rounded;
+                        rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                        rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                        rounded.z = 0;
+                        cubeSelected.transform.position = rounded;*/
+                        prefabReadyToTransform = true;
+                    }
+                }
+                else //Then we move that cube again
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        Vector3 rounded;
+                        rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                        rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                        rounded.z = 0;
+                        cubeSelected.transform.position = rounded;
+                        prefabTransform = false;
+                        prefabReadyToTransform = false;
+                    }
+                }
+
+            }
+        }
+        if (prefabRotate)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!prefabReadyToRotate) //input to select a cube
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.name is "LevelEditor")
+                        {
+                            return;
+                        }
+                        cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                        Debug.Log(cubeSelected.name);
+                        prefabReadyToRotate = true;
+                    }
+                }
+                else //Then we rotate that cube 
+                {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+
+                        cubeSelected.transform.Rotate(cubeSelected.transform.forward, 90);
+                        prefabRotate = false;
+                        prefabReadyToRotate = false;
+                    }
+                }
+
+            }
+        }
+
     }
 
     public void PickPrefabToPlace(int selection)
     {
-        switch(selection)
+        switch (selection)
         {
             case 1:
                 prefab = cube1;

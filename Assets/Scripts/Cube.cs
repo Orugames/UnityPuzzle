@@ -11,23 +11,40 @@ public class Cube : MonoBehaviour
 
     void Start()
     {
-        foreach(Transform child in transform)
+        color = new Color(
+            UnityEngine.Random.Range(0f, 1f),
+            UnityEngine.Random.Range(0f, 1f),
+            UnityEngine.Random.Range(0f, 1f));
+
+        foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());
+
+
+
+            child.GetComponent<CubeSide>().cubeSideColor = color;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-       cubeCompleted = CheckCompletion();
-       if (cubeCompleted)
+        UpdateCube();
+        //cubeCompleted = CheckCompletion();
+        if (cubeCompleted)
         {
             //Debug.Log("yeahhhhh");
         }
     }
+    public void UpdateCube()
+    {
+        foreach (CubeSide cubeSide in cubeSides)
+        {
+            cubeSide.UpdateSide();
+        }
+    }
 
-   
+
     private bool CheckCompletion()
     {
         foreach (CubeSide side in cubeSides)
