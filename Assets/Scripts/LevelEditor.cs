@@ -8,6 +8,7 @@ public class LevelEditor : MonoBehaviour
     float gridSize = 1;
 
     public  GameObject prefab;
+    public  GameObject cube;
     public bool modifyValues;
 
     void Start()
@@ -29,15 +30,12 @@ public class LevelEditor : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Vector3 point2 = hit.point;
-                GameObject newPrefab = Instantiate(prefab);
-
                 Vector3 rounded;
                 rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
                 rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
                 rounded.z = 0;
-                newPrefab.transform.position = rounded;
-                newPrefab.GetComponent<GridCubeLogic>().Initialize();
+                cube.transform.position = rounded;
+
             }
         }
             

@@ -70,8 +70,12 @@ public class CubeSide : MonoBehaviour
                 if (hit.collider.gameObject == this.gameObject)
                 {
                     number += 1;
-                    if (number > 6) number = 0;
                     numberText.text = number.ToString();
+                    if (number > 6)
+                    {
+                        number = 0;
+                        numberText.text = "";
+                    }
                     oposedNumber = oposedSide.number;
                 }
             }
