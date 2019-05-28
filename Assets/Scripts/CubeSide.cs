@@ -14,6 +14,7 @@ public class CubeSide : MonoBehaviour
     public GameObject MarkerGO;
     public Renderer MarkerGORenderer;
     public TextMeshPro numberText;
+    public TextMeshPro posText;
     public Vector2 position;
     public Color cubeSideColor;
     public bool fixedNumber;
@@ -27,7 +28,7 @@ public class CubeSide : MonoBehaviour
     }
     void Start()
     {
-
+        cubeParents.Add(transform.parent.GetComponent<Cube>());
     }
 
     // Update is called once per frame
@@ -37,12 +38,23 @@ public class CubeSide : MonoBehaviour
     }
     public void UpdateSide()
     {
-        GetComponent<Renderer>().material.color = cubeSideColor;
+        //GetComponent<Renderer>().material.color = cubeSideColor;
         position = transform.position;
         oposedNumber = oposedSide.number;
         numberText.text = number.ToString();
         oposedNumber = oposedSide.number;
         UpdateMarker();
+        int x = (int)transform.position.x;
+        int y = (int)transform.position.y;
+        posText.text = x.ToString() + "," + y.ToString();
+        posText.name = x.ToString() + "," + y.ToString();
+        name = "Cubeside " + posText.text;
+        if (number > 6 || number <= 0)
+        {
+            number = 0;
+            numberText.text = "";
+            numberText.text = posText.text;
+        }
     }
 
     void UpdateMarker()
@@ -63,7 +75,7 @@ public class CubeSide : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && modifyValues)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -77,11 +89,16 @@ public class CubeSide : MonoBehaviour
                     {
                         number = 0;
                         numberText.text = "";
+                        numberText.text = posText.text;
                     }
                     oposedNumber = oposedSide.number;
                 }
             }
         }
 
+    }
+    public void ToggleModifyValues()
+    {
+        modifyValues = !modifyValues;
     }
 }

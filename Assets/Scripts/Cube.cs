@@ -8,6 +8,7 @@ public class Cube : MonoBehaviour
     public Color color;
     public bool cubeCompleted;
     public List<CubeSide> cubeSides = new List<CubeSide>();
+    public List<int> cubeSidesNumbers = new List<int>();
 
     void Start()
     {
@@ -24,12 +25,13 @@ public class Cube : MonoBehaviour
 
             child.GetComponent<CubeSide>().cubeSideColor = color;
         }
+        name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateCube();
+        //UpdateCube();
         //cubeCompleted = CheckCompletion();
         if (cubeCompleted)
         {
@@ -38,14 +40,26 @@ public class Cube : MonoBehaviour
     }
     public void UpdateCube()
     {
+        cubeSidesNumbers.Clear();
         foreach (CubeSide cubeSide in cubeSides)
         {
             cubeSide.UpdateSide();
+            cubeSidesNumbers.Add(cubeSide.number);
         }
+      
+        cubeSidesNumbers.Sort();
+
+        Debug.Log(String.Join("",
+             new List<int>(cubeSidesNumbers)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
+
+        cubeCompleted = CheckCompletion();
+
     }
 
 
-    private bool CheckCompletion()
+    public bool CheckCompletion()
     {
         foreach (CubeSide side in cubeSides)
         {
@@ -58,6 +72,14 @@ public class Cube : MonoBehaviour
             {
                 Debug.Log("Wrong sum, the sum of this pair is " + (side.number + side.oposedSide.number));
                 return false;
+            }
+
+            for (int i = 0; i < cubeSidesNumbers.Count; i++)
+            {
+                if (i+1 != cubeSidesNumbers[i]) //if 123456 is not equal to 123456
+                {
+                    return false;
+                }
             }
         }
         return true;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class LevelEditor : MonoBehaviour
 {
@@ -30,14 +31,35 @@ public class LevelEditor : MonoBehaviour
     public GameObject cube19;
     public GameObject cube20;
     GameObject cubeSelected;
-
-    public bool modifyValues;
+    public List<Cube> cubes = new List<Cube>();
+    public List<CubeSide> cubeSides = new List<CubeSide>();
+    public List<Vector2> cubeSidesPos = new List<Vector2>();
+    public bool modifyValuesBool;
     public bool prefabPicked;
     public bool prefabTransform;
     public bool prefabReadyToTransform;
     public bool prefabRotate;
     public bool prefabReadyToRotate;
+    
+    public static LevelEditor instance = null;
 
+    void Awake()
+    {
+        //Check if instance already exists
+        if (instance == null)
+
+            //if not, set instance to this
+            instance = this;
+
+        //If instance already exists and it's not this:
+        else if (instance != this)
+
+            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+            Destroy(gameObject);
+
+        //Sets this to not be destroyed when reloading scene
+        DontDestroyOnLoad(gameObject);
+    }
     void Start()
     {
 
@@ -47,6 +69,24 @@ public class LevelEditor : MonoBehaviour
     void Update()
     {
         OnMouseDown();
+        
+        if (cubes == null || cubeSides == null)
+        {
+            return;
+        }
+        foreach (Cube cube in cubes)
+        {
+            cube.UpdateCube();
+            cube.CheckCompletion();
+        }
+        cubeSidesPos.Clear();
+        foreach (CubeSide side in cubeSides)
+        {
+            cubeSidesPos.Add(side.transform.position);
+        }
+        CheckForDuplicates();
+        
+        
     }
 
     public void OnMouseDown()
@@ -75,7 +115,15 @@ public class LevelEditor : MonoBehaviour
                     rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
                     rounded.z = 0;
                     newCube.transform.position = rounded;
+                    newCube.transform.parent = cubeContainer.transform;
+
+                    cubes.Add(newCube.GetComponent<Cube>());
+                    foreach (Transform child in newCube.transform)
+                    {
+                        cubeSides.Add(child.GetComponent<CubeSide>());
+                    }
                     prefabPicked = false;
+
                 }
             }
 
@@ -83,82 +131,159 @@ public class LevelEditor : MonoBehaviour
 
         if (prefabTransform) //Pushed the button to transform, ready to pick a cube
         {
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!prefabReadyToTransform) //input to select a cube
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        if (hit.collider.name is "LevelEditor")
-                        {
-                            return;
-                        }
-                        cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
-                        Debug.Log(cubeSelected.name);
-                        /*Vector3 rounded;
-                        rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
-                        rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
-                        rounded.z = 0;
-                        cubeSelected.transform.position = rounded;*/
-                        prefabReadyToTransform = true;
-                    }
-                }
-                else //Then we move that cube again
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        Vector3 rounded;
-                        rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
-                        rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
-                        rounded.z = 0;
-                        cubeSelected.transform.position = rounded;
-                        prefabTransform = false;
-                        prefabReadyToTransform = false;
-                    }
-                }
-
-            }
+            TransformCubeLogic();
         }
         if (prefabRotate)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!prefabReadyToRotate) //input to select a cube
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        if (hit.collider.name is "LevelEditor")
-                        {
-                            return;
-                        }
-                        cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
-                        Debug.Log(cubeSelected.name);
-                        prefabReadyToRotate = true;
-                    }
-                }
-                else //Then we rotate that cube 
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
+            RotateCubeLogic();           
+        }
 
-                        cubeSelected.transform.Rotate(cubeSelected.transform.forward, 90);
-                        prefabRotate = false;
-                        prefabReadyToRotate = false;
-                    }
+    }
+    void HologramCubeTransform()
+    {
+        if (prefabReadyToTransform)
+        {
+            //If we clicked a cube, we see and move its hologram
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name is "LevelEditor")
+                {
+                    return;
                 }
+                cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                Debug.Log(cubeSelected.name);
+                Vector3 rounded;
+                rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                rounded.z = 0;
+                cubeSelected.transform.position = rounded;
 
             }
         }
+    }
 
+    void TransformCubeLogic()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!prefabReadyToTransform) //input to select a cube
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.name is "LevelEditor")
+                    {
+                        return;
+                    }
+                    cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                    Debug.Log(cubeSelected.name);
+                    /*Vector3 rounded;
+                    rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                    rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                    rounded.z = 0;
+                    cubeSelected.transform.position = rounded;*/
+                    prefabReadyToTransform = true;
+                }
+            }
+            else //Then we move that cube again
+            {
+                
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 rounded;
+                    rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                    rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                    rounded.z = 0;
+                    cubeSelected.transform.position = rounded;
+                    //prefabTransform = false;
+                    prefabReadyToTransform = false;
+                    cubeSelected.name = "Cube " + cubeSelected.transform.position.x.ToString() + 
+                                        " , " + cubeSelected.transform.position.y.ToString();
+
+                }
+            }
+
+        }
+    }
+    void RotateCubeLogic()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!prefabReadyToRotate) //input to select a cube
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.name is "LevelEditor")
+                    {
+                        return;
+                    }
+                    cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                    Debug.Log(cubeSelected.name);
+                    prefabReadyToRotate = true;
+                }
+            }
+            else //Then we rotate that cube 
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+
+                    cubeSelected.transform.Rotate(cubeSelected.transform.forward, 90);
+                    //prefabRotate = false;
+                    prefabReadyToRotate = false;
+                }
+            }
+
+        }
+    }
+
+
+    private void CheckForDuplicates()
+    {
+        Vector2 go1;
+        Vector2 go2;
+        for (var i = 0; i < cubeSidesPos.Count - 1; i++)
+        {
+            for (var k = i + 1; k < cubeSidesPos.Count; k++)
+            {
+                var distance = Vector3.Distance(cubeSidesPos[i], cubeSidesPos[k]);
+                if (distance < 0.1f)
+                {
+                    Debug.Log("He encontrado un duplicado");
+                }
+            }
+        }
+    }
+
+    public int GetRepetitions(int[] myList, int value)
+    {
+        int repetitions = 0;
+        for (int i = 0; i < myList.Length; i++)
+        {
+            if ((myList[i] == value) && ((i == 0 ? false : myList[i - 1] == value) ||
+                 (i == myList.Length - 1 ? false : myList[i + 1] == value)))
+            {
+                repetitions++;
+            }
+        }
+        return repetitions;
+    }
+
+    public void ModifyValuesToggle()
+    {
+        modifyValuesBool = !modifyValuesBool;
+        foreach(CubeSide cubeSide in cubeSides)
+        {
+            cubeSide.modifyValues = modifyValuesBool;
+        }       
     }
 
     public void PickPrefabToPlace(int selection)
@@ -231,10 +356,19 @@ public class LevelEditor : MonoBehaviour
 
     public void TransformCube()
     {
-        prefabTransform = true;
+        prefabTransform = !prefabTransform;
     }
     public void RotateCube()
     {
-        prefabRotate = true;
+        prefabRotate = !prefabRotate;
+    }
+    public void ClearStage()
+    {
+        cubes.Clear();
+        cubeSides.Clear();
+        foreach (Transform child in cubeContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }
