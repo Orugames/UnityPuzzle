@@ -174,7 +174,7 @@ public class LevelEditor : MonoBehaviour
             foreach (Transform child in cube.transform)
             {
                 CubeSide side = child.GetComponent<CubeSide>();
-                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)+1) + " Side " + cubeSides.IndexOf(side), side.number);
+                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + cubeSides.IndexOf(side), side.number);
 
 
             }
