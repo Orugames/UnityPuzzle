@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Linq;
+using CI.QuickSave;
+
 public class LevelEditor : MonoBehaviour
 {
     float gridSize = 1;
@@ -69,6 +71,8 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(Application.persistentDataPath);
+
 
         CheckForDuplicates();
         OnMouseDown();
@@ -153,6 +157,32 @@ public class LevelEditor : MonoBehaviour
         {
             RotateCubeLogic();
         }
+
+    }
+
+
+    public void SaveData()
+    {
+        Debug.Log("saved data");
+        QuickSaveWriter quickSaveWriterCubePos = QuickSaveWriter.Create("CubePositions");
+        QuickSaveWriter quickSaveWriterSideNumbers = QuickSaveWriter.Create("SideValues");
+
+        foreach (Cube cube in cubes)
+        {
+            quickSaveWriterCubePos.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
+
+            foreach (Transform child in cube.transform)
+            {
+                CubeSide side = child.GetComponent<CubeSide>();
+                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)+1) + " Side " + cubeSides.IndexOf(side), side.number);
+
+
+            }
+        }
+
+        quickSaveWriterCubePos.Commit();
+        quickSaveWriterSideNumbers.Commit();
+
 
     }
     void HologramCubeTransform()
