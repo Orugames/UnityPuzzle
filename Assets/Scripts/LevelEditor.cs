@@ -163,28 +163,59 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveData()
     {
-        Debug.Log("saved data");
+        Debug.Log("SavedData");
         QuickSaveWriter quickSaveWriterCubePos = QuickSaveWriter.Create("CubePositions");
         QuickSaveWriter quickSaveWriterSideNumbers = QuickSaveWriter.Create("SideValues");
 
         foreach (Cube cube in cubes)
         {
             quickSaveWriterCubePos.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
-
+            int i = 0;
             foreach (Transform child in cube.transform)
             {
+                
                 CubeSide side = child.GetComponent<CubeSide>();
-                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + cubeSides.IndexOf(side), side.number);
+                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + i, side.number);
+                i++;
 
+            }
+        }
+        quickSaveWriterCubePos.Write("CubeCount", cubes.Count);
+        quickSaveWriterSideNumbers.Write("SidesCount", cubeSides.Count);
+        quickSaveWriterCubePos.Commit();
+        quickSaveWriterSideNumbers.Commit();
+    }
+    public void LoadData()
+    {
+        QuickSaveReader readerCubePos = QuickSaveReader.Create("CubePositions");
+        QuickSaveReader readerCubeNumbers = QuickSaveReader.Create("SideValues");
+        
+        int numberCubes = readerCubePos.Read<int>("CubeCount");
+        int numberOfSides = readerCubeNumbers.Read<int>("SidesCount");
+
+        List<Vector3> loadedCubesPos = new List<Vector3>();
+        List<int> loadedSidesValues = new List<int>();
+
+        for (int i = 0; i < numberCubes; i++)
+      
+        {
+            loadedCubesPos.Add(readerCubePos.Read<Vector3>("CubePos " + i));
+            for (int j = 0; j < 6; j++)
+            {
+                loadedSidesValues.Add(readerCubeNumbers.Read<int>("Cube " + i + " Side " + j));
 
             }
         }
 
-        quickSaveWriterCubePos.Commit();
-        quickSaveWriterSideNumbers.Commit();
-
-
+        ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos,loadedSidesValues);
     }
+
+    private void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedSidesValues)
+    {
+        
+    }
+
+  
     void HologramCubeTransform()
     {
         if (prefabReadyToTransform)

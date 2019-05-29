@@ -69,12 +69,12 @@ public class Cube : MonoBehaviour
         {
             if (side.number == 0 || side.number < 0 || side.number > 6 || cubeSides.Count != 6)
             {
-                Debug.Log("The cube is null or it has the wrong numbers");
+                //Debug.Log("The cube is null or it has the wrong numbers");
                 return false;
             }
             if (side.number + side.oposedSide.number != 7)
             {
-                Debug.Log("Wrong sum, the sum of this pair is " + (side.number + side.oposedSide.number));
+                //Debug.Log("Wrong sum, the sum of this pair is " + (side.number + side.oposedSide.number));
                 return false;
             }
 
