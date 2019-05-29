@@ -22,7 +22,6 @@ public class Cube : MonoBehaviour
             cubeSides.Add(child.GetComponent<CubeSide>());
 
 
-
             child.GetComponent<CubeSide>().cubeSideColor = color;
         }
         name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
@@ -31,22 +30,27 @@ public class Cube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //UpdateCube();
-        //cubeCompleted = CheckCompletion();
-        if (cubeCompleted)
-        {
-            //Debug.Log("yeahhhhh");
-        }
+        
     }
     public void UpdateCube()
     {
         cubeSidesNumbers.Clear();
+        cubeSides.Clear();
+        foreach (Transform child in transform)
+        {
+            if (child.GetComponent<CubeSide>()) cubeSides.Add(child.GetComponent<CubeSide>());
+            else cubeSides.Add(child.GetComponent<CombinedSide>());
+
+            child.GetComponent<CubeSide>().cubeSideColor = color;
+        }
         foreach (CubeSide cubeSide in cubeSides)
         {
             cubeSide.UpdateSide();
             cubeSidesNumbers.Add(cubeSide.number);
+
         }
-      
+       
+
         cubeSidesNumbers.Sort();
 
         Debug.Log(String.Join("",

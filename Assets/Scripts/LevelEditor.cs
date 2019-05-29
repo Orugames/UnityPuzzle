@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
-
+using System.Linq;
 public class LevelEditor : MonoBehaviour
 {
     float gridSize = 1;
 
+    public GameObject combinedSidePrefab;
     public GameObject cubeContainer;
     public GameObject prefab;
     public GameObject cube1;
@@ -33,14 +34,14 @@ public class LevelEditor : MonoBehaviour
     GameObject cubeSelected;
     public List<Cube> cubes = new List<Cube>();
     public List<CubeSide> cubeSides = new List<CubeSide>();
-    public List<Vector2> cubeSidesPos = new List<Vector2>();
+    public List<GameObject> cubeSidesGO = new List<GameObject>();
     public bool modifyValuesBool;
     public bool prefabPicked;
     public bool prefabTransform;
     public bool prefabReadyToTransform;
     public bool prefabRotate;
     public bool prefabReadyToRotate;
-    
+
     public static LevelEditor instance = null;
 
     void Awake()
@@ -68,25 +69,40 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        CheckForDuplicates();
         OnMouseDown();
-        
         if (cubes == null || cubeSides == null)
         {
             return;
         }
+        cubeSides.Clear();
+        cubeSidesGO.Clear();
+   
+
+
         foreach (Cube cube in cubes)
         {
             cube.UpdateCube();
             cube.CheckCompletion();
+                     
+            foreach (Transform child in cube.transform)
+            {
+                if (cubeSides.Count < cubes.Count * 6 ) cubeSides.Add(child.GetComponent<CubeSide>());
+
+
+            }
         }
-        cubeSidesPos.Clear();
+        cubeSides = cubeSides.Distinct().ToList();
+
         foreach (CubeSide side in cubeSides)
         {
-            cubeSidesPos.Add(side.transform.position);
+            cubeSidesGO.Add(side.gameObject);
         }
-        CheckForDuplicates();
-        
-        
+        cubeSides.TrimExcess();
+
+
+
     }
 
     public void OnMouseDown()
@@ -118,10 +134,10 @@ public class LevelEditor : MonoBehaviour
                     newCube.transform.parent = cubeContainer.transform;
 
                     cubes.Add(newCube.GetComponent<Cube>());
-                    foreach (Transform child in newCube.transform)
+                    /*foreach (Transform child in newCube.transform)
                     {
                         cubeSides.Add(child.GetComponent<CubeSide>());
-                    }
+                    }*/
                     prefabPicked = false;
 
                 }
@@ -135,7 +151,7 @@ public class LevelEditor : MonoBehaviour
         }
         if (prefabRotate)
         {
-            RotateCubeLogic();           
+            RotateCubeLogic();
         }
 
     }
@@ -190,7 +206,7 @@ public class LevelEditor : MonoBehaviour
             }
             else //Then we move that cube again
             {
-                
+
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
@@ -202,7 +218,7 @@ public class LevelEditor : MonoBehaviour
                     cubeSelected.transform.position = rounded;
                     //prefabTransform = false;
                     prefabReadyToTransform = false;
-                    cubeSelected.name = "Cube " + cubeSelected.transform.position.x.ToString() + 
+                    cubeSelected.name = "Cube " + cubeSelected.transform.position.x.ToString() +
                                         " , " + cubeSelected.transform.position.y.ToString();
 
                 }
@@ -248,22 +264,38 @@ public class LevelEditor : MonoBehaviour
 
     private void CheckForDuplicates()
     {
-        Vector2 go1;
-        Vector2 go2;
-        for (var i = 0; i < cubeSidesPos.Count - 1; i++)
+        for (var i = 0; i < cubeSides.Count - 1; i++)
         {
-            for (var k = i + 1; k < cubeSidesPos.Count; k++)
+            for (var k = i + 1; k < cubeSides.Count; k++)
             {
-                var distance = Vector3.Distance(cubeSidesPos[i], cubeSidesPos[k]);
-                if (distance < 0.1f)
+                var distance = Vector3.Distance(cubeSides[i].transform.position, cubeSides[k].transform.position);
+
+                if (distance < 0.1f && !cubeSides[i].combinedCube && !cubeSides[k].combinedCube)
                 {
-                    Debug.Log("He encontrado un duplicado");
+                    Debug.Log("Found duplicate, change to two combined ones");
+                    Debug.Log(cubeSides[i].name);
+                    Debug.Log(cubeSides[k].name);
+
+                    cubeSides[i].combinedCube = true;
+                    cubeSides[k].combinedCube = true;
+                    cubeSides[i].cubeParents.Add(cubeSides[i].gameObject.transform.parent.GetComponent<Cube>());
+                    cubeSides[i].cubeParents.Add(cubeSides[k].transform.parent.GetComponent<Cube>());
+                    cubeSides[k].cubeParents.Add(cubeSides[i].transform.parent.GetComponent<Cube>());
+                    cubeSides[k].cubeParents.Add(cubeSides[k].transform.parent.GetComponent<Cube>());
+                    cubeSides[i].similarCubeSide = cubeSides[k];
+                    cubeSides[k].similarCubeSide = cubeSides[i];
+
+                    cubeSides[k].GetComponent<MeshRenderer>().enabled = false;
+                    cubeSides[k].GetComponent<BoxCollider>().enabled = false;
+
+
+
                 }
             }
         }
     }
 
-    public int GetRepetitions(int[] myList, int value)
+    public int GetRepetitions(string[] myList, string value)
     {
         int repetitions = 0;
         for (int i = 0; i < myList.Length; i++)
@@ -280,10 +312,10 @@ public class LevelEditor : MonoBehaviour
     public void ModifyValuesToggle()
     {
         modifyValuesBool = !modifyValuesBool;
-        foreach(CubeSide cubeSide in cubeSides)
+        foreach (CubeSide cubeSide in cubeSides)
         {
             cubeSide.modifyValues = modifyValuesBool;
-        }       
+        }
     }
 
     public void PickPrefabToPlace(int selection)

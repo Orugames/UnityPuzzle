@@ -3671,6 +3671,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a014f96febf8ad44a35deae8ca2c1bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combinedSidePrefab: {fileID: 6421283963988064213, guid: 2633546a25a287d43ba5443306ca7f6c,
+    type: 3}
   cubeContainer: {fileID: 2069418691}
   prefab: {fileID: 0}
   cube1: {fileID: 4102583328288679819, guid: 1b471cc4cb8d187429371da54438a17b, type: 3}
@@ -3695,6 +3697,7 @@ MonoBehaviour:
   cube20: {fileID: 3784530686367965314, guid: 18ded9631de168f4a8fe013b4f5d2280, type: 3}
   cubes: []
   cubeSides: []
+  cubeSidesGO: []
   modifyValuesBool: 0
   prefabPicked: 0
   prefabTransform: 0

@@ -6,10 +6,13 @@ using System;
 
 public class CubeSide : MonoBehaviour
 {
+    public bool alreadyPositioned;
     public int number = 0;
     public int oposedNumber = 0;
+    public Cube cubeParent;
     public List<Cube> cubeParents = new List<Cube>();
     public GameObject oposedSideGO;
+    public CubeSide similarCubeSide;
     public CubeSide oposedSide;
     public GameObject MarkerGO;
     public Renderer MarkerGORenderer;
@@ -19,6 +22,8 @@ public class CubeSide : MonoBehaviour
     public Color cubeSideColor;
     public bool fixedNumber;
     public bool modifyValues;
+    public bool combinedCube;
+
 
 
     private void Reset()
@@ -28,7 +33,8 @@ public class CubeSide : MonoBehaviour
     }
     void Start()
     {
-        cubeParents.Add(transform.parent.GetComponent<Cube>());
+        cubeParent = transform.parent.GetComponent<Cube>();
+        GetComponent<Renderer>().material.color = cubeSideColor;
     }
 
     // Update is called once per frame
@@ -38,7 +44,7 @@ public class CubeSide : MonoBehaviour
     }
     public void UpdateSide()
     {
-        //GetComponent<Renderer>().material.color = cubeSideColor;
+        GetComponent<Renderer>().material.color = cubeSideColor;
         position = transform.position;
         oposedNumber = oposedSide.number;
         numberText.text = number.ToString();
@@ -53,15 +59,23 @@ public class CubeSide : MonoBehaviour
         {
             number = 0;
             numberText.text = "";
-            numberText.text = posText.text;
+            //numberText.text = posText.text;
+        }
+
+        if (combinedCube)
+        {
+            cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
+            GetComponent<Renderer>().material.color = cubeSideColor;
+            similarCubeSide.number = number;
+
+
         }
     }
 
     void UpdateMarker()
     {
-        foreach (Cube parentCube in cubeParents)
-        {
-            if (!parentCube.cubeCompleted || cubeParents == null)
+        if (cubeParent != null)
+            if (!cubeParent.cubeCompleted)
             {
                 MarkerGORenderer.material.color = Color.red;
             }
@@ -70,7 +84,7 @@ public class CubeSide : MonoBehaviour
                 MarkerGORenderer.material.color = Color.green;
 
             }
-        }
+        
     }
 
     private void OnMouseDown()
