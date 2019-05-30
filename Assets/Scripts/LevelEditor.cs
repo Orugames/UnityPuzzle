@@ -163,58 +163,68 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveData()
     {
-        QuickSaveWriter quickSaveWriterCubePos = QuickSaveWriter.Create("CubePosAndPrefab");
-        QuickSaveWriter quickSaveWriterSideNumbers = QuickSaveWriter.Create("SideValues");
+        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
+        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
+        if (currentLevel == null) currentLevel = 0;
+        currentLevel += 1;
+        QuickSaveWriter quickSaveWriterCurrentLevel = QuickSaveWriter.Create("CurrentLevelValues" + currentLevel);
+
+        QuickSaveWriter quickSaveLevelWriter = QuickSaveWriter.Create("Level");
 
         foreach (Cube cube in cubes)
         {
-            quickSaveWriterCubePos.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
-            quickSaveWriterCubePos.Write("CubePrefab " + cubes.IndexOf(cube) ,cube.prefabNum);
+            quickSaveWriterCurrentLevel.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
+            quickSaveWriterCurrentLevel.Write("CubePrefab " + cubes.IndexOf(cube) ,cube.prefabNum);
 
             int i = 0;
             foreach (Transform child in cube.transform)
             {
                 
                 CubeSide side = child.GetComponent<CubeSide>();
-                quickSaveWriterSideNumbers.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + i, side.number);
+                quickSaveWriterCurrentLevel.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + i, side.number);
                 i++;
 
             }
         }
-        quickSaveWriterCubePos.Write("CubeCount", cubes.Count);
-        quickSaveWriterSideNumbers.Write("SidesCount", cubeSides.Count);
-        quickSaveWriterCubePos.Commit();
-        quickSaveWriterSideNumbers.Commit();
+
+        quickSaveLevelWriter.Write("LevelNumber", currentLevel);
+
+        quickSaveWriterCurrentLevel.Write("CubeCount", cubes.Count);
+        quickSaveWriterCurrentLevel.Write("SidesCount", cubeSides.Count);
+        quickSaveWriterCurrentLevel.Commit();
+        quickSaveLevelWriter.Commit();
+        Debug.Log("Saved data from level " + currentLevel);
     }
     public void LoadData()
     {
-        QuickSaveReader readerCubePos = QuickSaveReader.Create("CubePosAndPrefab");
-        QuickSaveReader readerSideNumbers = QuickSaveReader.Create("SideValues");
+        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
+        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
+        QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + currentLevel);
         
-        int numberCubes = readerCubePos.Read<int>("CubeCount");
-        int numberOfSides = readerSideNumbers.Read<int>("SidesCount");
+        int numberCubes = readerLevelValues.Read<int>("CubeCount");
+        int numberOfSides = readerLevelValues.Read<int>("SidesCount");
 
         List<Vector3> loadedCubesPos = new List<Vector3>();
         List<int> loadedPrefabNumbers = new List<int>();
         List<int> loadedSidesValues = new List<int>();
+        Debug.Log("Loaded data from level " + currentLevel);
 
 
         for (int i = 0; i < numberCubes; i++)
       
         {
-            loadedPrefabNumbers.Add(readerCubePos.Read<int>("CubePrefab " + i));
-            loadedCubesPos.Add(readerCubePos.Read<Vector3>("CubePos " + i));
+            loadedPrefabNumbers.Add(readerLevelValues.Read<int>("CubePrefab " + i));
+            loadedCubesPos.Add(readerLevelValues.Read<Vector3>("CubePos " + i));
             for (int j = 0; j < 6; j++)
             {
-                loadedSidesValues.Add(readerSideNumbers.Read<int>("Cube " + i + " Side " + j));
+                loadedSidesValues.Add(readerLevelValues.Read<int>("Cube " + i + " Side " + j));
 
             }
         }
 
         ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos, loadedPrefabNumbers,loadedSidesValues); //NEEDS HEAVY REFACTOR
     }
-
-    private void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedPrefabNumbers, List<int> loadedSidesValues)
+    void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedPrefabNumbers, List<int> loadedSidesValues)
     {
         for (int i = 0; i < numberCubes; i++)
         {
