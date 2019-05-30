@@ -224,6 +224,38 @@ public class LevelEditor : MonoBehaviour
 
         ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos, loadedPrefabNumbers,loadedSidesValues); //NEEDS HEAVY REFACTOR
     }
+
+    public void LoadData(int levelSelection)
+    {
+        QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + levelSelection);
+
+        int numberCubes = readerLevelValues.Read<int>("CubeCount");
+        int numberOfSides = readerLevelValues.Read<int>("SidesCount");
+
+        List<Vector3> loadedCubesPos = new List<Vector3>();
+        List<int> loadedPrefabNumbers = new List<int>();
+        List<int> loadedSidesValues = new List<int>();
+        Debug.Log("Loaded data from level " + levelSelection);
+
+
+        for (int i = 0; i < numberCubes; i++)
+
+        {
+            loadedPrefabNumbers.Add(readerLevelValues.Read<int>("CubePrefab " + i));
+            loadedCubesPos.Add(readerLevelValues.Read<Vector3>("CubePos " + i));
+            for (int j = 0; j < 6; j++)
+            {
+                loadedSidesValues.Add(readerLevelValues.Read<int>("Cube " + i + " Side " + j));
+
+            }
+        }
+
+        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
+    }
+
+
+
+
     void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedPrefabNumbers, List<int> loadedSidesValues)
     {
         for (int i = 0; i < numberCubes; i++)
