@@ -163,13 +163,14 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveData()
     {
-        Debug.Log("SavedData");
-        QuickSaveWriter quickSaveWriterCubePos = QuickSaveWriter.Create("CubePositions");
+        QuickSaveWriter quickSaveWriterCubePos = QuickSaveWriter.Create("CubePosAndPrefab");
         QuickSaveWriter quickSaveWriterSideNumbers = QuickSaveWriter.Create("SideValues");
 
         foreach (Cube cube in cubes)
         {
             quickSaveWriterCubePos.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
+            quickSaveWriterCubePos.Write("CubePrefab " + cubes.IndexOf(cube) ,cube.prefabNum);
+
             int i = 0;
             foreach (Transform child in cube.transform)
             {
@@ -187,32 +188,62 @@ public class LevelEditor : MonoBehaviour
     }
     public void LoadData()
     {
-        QuickSaveReader readerCubePos = QuickSaveReader.Create("CubePositions");
-        QuickSaveReader readerCubeNumbers = QuickSaveReader.Create("SideValues");
+        QuickSaveReader readerCubePos = QuickSaveReader.Create("CubePosAndPrefab");
+        QuickSaveReader readerSideNumbers = QuickSaveReader.Create("SideValues");
         
         int numberCubes = readerCubePos.Read<int>("CubeCount");
-        int numberOfSides = readerCubeNumbers.Read<int>("SidesCount");
+        int numberOfSides = readerSideNumbers.Read<int>("SidesCount");
 
         List<Vector3> loadedCubesPos = new List<Vector3>();
+        List<int> loadedPrefabNumbers = new List<int>();
         List<int> loadedSidesValues = new List<int>();
+
 
         for (int i = 0; i < numberCubes; i++)
       
         {
+            loadedPrefabNumbers.Add(readerCubePos.Read<int>("CubePrefab " + i));
             loadedCubesPos.Add(readerCubePos.Read<Vector3>("CubePos " + i));
             for (int j = 0; j < 6; j++)
             {
-                loadedSidesValues.Add(readerCubeNumbers.Read<int>("Cube " + i + " Side " + j));
+                loadedSidesValues.Add(readerSideNumbers.Read<int>("Cube " + i + " Side " + j));
 
             }
         }
 
-        ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos,loadedSidesValues);
+        ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos, loadedPrefabNumbers,loadedSidesValues); //NEEDS HEAVY REFACTOR
     }
 
-    private void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedSidesValues)
+    private void ReloadObjectsData(int numberCubes, int numberOfSides, List<Vector3> loadedCubesPos, List<int> loadedPrefabNumbers, List<int> loadedSidesValues)
     {
-        
+        for (int i = 0; i < numberCubes; i++)
+        {
+            Vector3 cubePos = loadedCubesPos[i];
+            int prefabNum = loadedPrefabNumbers[i];
+            PickPrefabToPlace(prefabNum); //this picks the prefabs stored here relative to the int
+            GameObject loadedCube = Instantiate(prefab, cubePos, Quaternion.identity);
+            loadedCube.transform.SetParent(cubeContainer.transform);
+            cubes.Add(loadedCube.GetComponent<Cube>());
+
+             for (int j = 0; j < 6; j++)
+             {
+                CubeSide side = loadedCube.transform.GetChild(j).GetComponent<CubeSide>();
+                int sideValue = loadedSidesValues[j + (i*6)];
+                side.number = sideValue;
+
+
+             }
+
+           /* foreach (Transform child in loadedCube.transform)
+            {
+                CubeSide side = child.GetComponent<CubeSide>();
+                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(side);
+                side.number = loadedSidesValues
+
+            }*/
+
+        }
+       
     }
 
   

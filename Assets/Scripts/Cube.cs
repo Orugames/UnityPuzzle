@@ -7,6 +7,8 @@ public class Cube : MonoBehaviour
 {
     public Color color;
     public bool cubeCompleted;
+    public GameObject prefab;
+    public int prefabNum;
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
 
@@ -25,6 +27,14 @@ public class Cube : MonoBehaviour
             child.GetComponent<CubeSide>().cubeSideColor = color;
         }
         name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
+
+        PrefabNameLogic();
+    }
+
+    void PrefabNameLogic()
+    {
+        /*var cubePrefab = Resources.Load<GameObject>("Prefabs/CubeTypes/Cube1");
+        switch ()*/
     }
 
     // Update is called once per frame
@@ -38,8 +48,7 @@ public class Cube : MonoBehaviour
         cubeSides.Clear();
         foreach (Transform child in transform)
         {
-            if (child.GetComponent<CubeSide>()) cubeSides.Add(child.GetComponent<CubeSide>());
-            else cubeSides.Add(child.GetComponent<CombinedSide>());
+            cubeSides.Add(child.GetComponent<CubeSide>());            
 
             child.GetComponent<CubeSide>().cubeSideColor = color;
         }
