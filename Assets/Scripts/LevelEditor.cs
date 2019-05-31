@@ -47,6 +47,7 @@ public class LevelEditor : MonoBehaviour
     public bool prefabReadyToTransform;
     public bool prefabRotate;
     public bool prefabReadyToRotate;
+    public bool prefabErase;
     public bool initBool;
     public int levelSelected;
     //public static LevelEditor instance = null;
@@ -87,25 +88,6 @@ public class LevelEditor : MonoBehaviour
         TransferAllA2B(saveAndLoad.transform, cubeContainer.transform);
     }
 
-    private void AssingToOriginalParent()
-    {
-        foreach (Transform child in saveAndLoad.transform)
-        {
-            Cube cube = child.GetComponent<Cube>();
-            cubes.Add(cube);
-
-            foreach (Transform grandchild in cube.transform)
-            {
-                cubeSides.Add(grandchild.GetComponent<CubeSide>());
-
-
-            }
-            cube.UpdateCube();
-            child.SetParent(cubeContainer.transform);
-
-
-        }
-    }
     void TransferAllA2B(Transform a, Transform b)
     {
         bool WorldPositionStayTheSame = false;
@@ -114,6 +96,7 @@ public class LevelEditor : MonoBehaviour
         while (kid = a.GetChild(0))
         {
             kid.SetParent(b, WorldPositionStayTheSame);
+            cubes.Add(kid.GetComponent<Cube>());
         }
     }
 
@@ -121,7 +104,7 @@ public class LevelEditor : MonoBehaviour
     void Update()
     {
         Debug.Log(Application.persistentDataPath);
-         if (!initBool) Init();
+        if (!initBool) Init();
 
 
         CheckForDuplicates();
@@ -132,17 +115,17 @@ public class LevelEditor : MonoBehaviour
         }
         cubeSides.Clear();
         cubeSidesGO.Clear();
-   
+
 
 
         foreach (Cube cube in cubes)
         {
             cube.UpdateCube();
             cube.CheckCompletion();
-                     
+
             foreach (Transform child in cube.transform)
             {
-                if (cubeSides.Count < cubes.Count * 6 ) cubeSides.Add(child.GetComponent<CubeSide>());
+                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(child.GetComponent<CubeSide>());
 
 
             }
@@ -207,6 +190,10 @@ public class LevelEditor : MonoBehaviour
         {
             RotateCubeLogic();
         }
+        if (prefabErase)
+        {
+            EraseCubeLogic();
+        }
 
     }
 
@@ -223,13 +210,13 @@ public class LevelEditor : MonoBehaviour
 
         foreach (Cube cube in cubes)
         {
-            quickSaveWriterCurrentLevel.Write("CubePos " + cubes.IndexOf(cube) , cube.transform.position);
-            quickSaveWriterCurrentLevel.Write("CubePrefab " + cubes.IndexOf(cube) ,cube.prefabNum);
+            quickSaveWriterCurrentLevel.Write("CubePos " + cubes.IndexOf(cube), cube.transform.position);
+            quickSaveWriterCurrentLevel.Write("CubePrefab " + cubes.IndexOf(cube), cube.prefabNum);
 
             int i = 0;
             foreach (Transform child in cube.transform)
             {
-                
+
                 CubeSide side = child.GetComponent<CubeSide>();
                 quickSaveWriterCurrentLevel.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + i, side.number);
                 i++;
@@ -250,7 +237,7 @@ public class LevelEditor : MonoBehaviour
         QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + currentLevel);
-        
+
         int numberCubes = readerLevelValues.Read<int>("CubeCount");
         int numberOfSides = readerLevelValues.Read<int>("SidesCount");
 
@@ -261,7 +248,7 @@ public class LevelEditor : MonoBehaviour
 
 
         for (int i = 0; i < numberCubes; i++)
-      
+
         {
             loadedPrefabNumbers.Add(readerLevelValues.Read<int>("CubePrefab " + i));
             loadedCubesPos.Add(readerLevelValues.Read<Vector3>("CubePos " + i));
@@ -272,7 +259,7 @@ public class LevelEditor : MonoBehaviour
             }
         }
 
-        ReloadObjectsData(numberCubes,numberOfSides,loadedCubesPos, loadedPrefabNumbers,loadedSidesValues); //NEEDS HEAVY REFACTOR
+        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
     }
 
     public void LoadData(int levelSelection)
@@ -317,28 +304,28 @@ public class LevelEditor : MonoBehaviour
             loadedCube.transform.SetParent(cubeContainer.transform);
             cubes.Add(loadedCube.GetComponent<Cube>());
 
-             for (int j = 0; j < 6; j++)
-             {
+            for (int j = 0; j < 6; j++)
+            {
                 CubeSide side = loadedCube.transform.GetChild(j).GetComponent<CubeSide>();
-                int sideValue = loadedSidesValues[j + (i*6)];
+                int sideValue = loadedSidesValues[j + (i * 6)];
                 side.number = sideValue;
 
 
-             }
+            }
 
-           /* foreach (Transform child in loadedCube.transform)
-            {
-                CubeSide side = child.GetComponent<CubeSide>();
-                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(side);
-                side.number = loadedSidesValues
+            /* foreach (Transform child in loadedCube.transform)
+             {
+                 CubeSide side = child.GetComponent<CubeSide>();
+                 if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(side);
+                 side.number = loadedSidesValues
 
-            }*/
+             }*/
 
         }
-       
+
     }
 
-  
+
     void HologramCubeTransform()
     {
         if (prefabReadyToTransform)
@@ -578,6 +565,10 @@ public class LevelEditor : MonoBehaviour
     {
         prefabRotate = !prefabRotate;
     }
+    public void EraseCube()
+    {
+        prefabErase = !prefabErase;
+    }
     public void ClearStage()
     {
         cubes.Clear();
@@ -585,6 +576,28 @@ public class LevelEditor : MonoBehaviour
         foreach (Transform child in cubeContainer.transform)
         {
             Destroy(child.gameObject);
+        }
+    }
+    public void EraseCubeLogic()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name is "LevelEditor")
+                {
+                    return;
+                }
+                cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                Debug.Log(cubeSelected.name);
+                cubes.Remove(cubeSelected.GetComponent<Cube>());
+                Destroy(cubeSelected);
+
+            }
+
+
         }
     }
 }
