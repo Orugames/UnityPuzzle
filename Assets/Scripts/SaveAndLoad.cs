@@ -37,13 +37,15 @@ public class SaveAndLoad : MonoBehaviour
     GameObject cubeSelected;
 
     public bool prefabPicked;
+    public bool singletonEnabled = true;
     public int levelSelected = 0;
     void Awake()
     {
+        if (singletonEnabled) {
         //Check if instance already exists
-        if (instance == null)
+        if (instance == null) 
 
-            //if not, set instance to this
+        //if not, set instance to this
             instance = this;
 
         //If instance already exists and it's not this:
@@ -54,6 +56,7 @@ public class SaveAndLoad : MonoBehaviour
 
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEditor;
 using System;
@@ -568,6 +569,11 @@ public class LevelEditor : MonoBehaviour
     public void EraseCube()
     {
         prefabErase = !prefabErase;
+    }
+    public void GoToLobby()
+    {
+        Destroy(GameObject.FindWithTag("Controllers"));
+        SceneManager.LoadScene(0);
     }
     public void ClearStage()
     {

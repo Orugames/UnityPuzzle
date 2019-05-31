@@ -40,6 +40,7 @@ public class LobbyLogic : MonoBehaviour
         Debug.Log("cargando info del nivel " + levelNumber);
         SceneManager.LoadScene(1);
         SaveAndLoad.instance.LoadData(levelNumber);
+        SaveAndLoad.instance.singletonEnabled = false;
         this.enabled = false;
 
     }
