@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
+using TMPro;
 
 public class SaveAndLoad : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class SaveAndLoad : MonoBehaviour
     GameObject cubeSelected;
 
     public bool prefabPicked;
+    public int levelSelected = 0;
     void Awake()
     {
         //Check if instance already exists
@@ -121,6 +123,7 @@ public class SaveAndLoad : MonoBehaviour
 
     public void LoadData(int levelSelection)
     {
+        levelSelected = levelSelection;
         Debug.Log("LevelSelection " + levelSelection);
         QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + levelSelection);
 

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using System;
 using System.Linq;
 using CI.QuickSave;
+using TMPro;
 
 public class LevelEditor : MonoBehaviour
 {
@@ -34,6 +36,7 @@ public class LevelEditor : MonoBehaviour
     public GameObject cube18;
     public GameObject cube19;
     public GameObject cube20;
+    public TextMeshProUGUI levelText;
     GameObject cubeSelected;
     public List<Cube> cubes = new List<Cube>();
     public List<CubeSide> cubeSides = new List<CubeSide>();
@@ -45,6 +48,7 @@ public class LevelEditor : MonoBehaviour
     public bool prefabRotate;
     public bool prefabReadyToRotate;
     public bool initBool;
+    public int levelSelected;
     //public static LevelEditor instance = null;
 
     //void Awake()
@@ -71,23 +75,45 @@ public class LevelEditor : MonoBehaviour
     }
     public void Init()
     {
-        saveAndLoad = GameObject.Find("Controllers");
+        saveAndLoad = GameObject.FindWithTag("Controllers");
+        levelSelected = saveAndLoad.GetComponent<SaveAndLoad>().levelSelected;
+
+        levelText.text = "Level " + levelSelected;
+        if (levelSelected == 0) levelText.text = "New Level";
+
 
         initBool = true;
+        //Invoke("AssingToOriginalParent",1);
+        TransferAllA2B(saveAndLoad.transform, cubeContainer.transform);
+    }
+
+    private void AssingToOriginalParent()
+    {
         foreach (Transform child in saveAndLoad.transform)
         {
             Cube cube = child.GetComponent<Cube>();
             cubes.Add(cube);
-            cube.UpdateCube();
-            child.SetParent(cubeContainer.transform);
+
             foreach (Transform grandchild in cube.transform)
             {
-                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(grandchild.GetComponent<CubeSide>());
+                cubeSides.Add(grandchild.GetComponent<CubeSide>());
 
 
             }
+            cube.UpdateCube();
+            child.SetParent(cubeContainer.transform);
 
 
+        }
+    }
+    void TransferAllA2B(Transform a, Transform b)
+    {
+        bool WorldPositionStayTheSame = false;
+
+        Transform kid;
+        while (kid = a.GetChild(0))
+        {
+            kid.SetParent(b, WorldPositionStayTheSame);
         }
     }
 
