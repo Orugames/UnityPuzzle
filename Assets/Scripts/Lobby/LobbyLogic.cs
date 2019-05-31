@@ -13,17 +13,25 @@ public class LobbyLogic : MonoBehaviour
 
     void Start()
     {
+        //quicksavewriter quicksavelevelwriter = quicksavewriter.create("level");
+        //quicksavelevelwriter.write("levelnumber", 0);
+        //quicksavelevelwriter.commit();
+
+
+
+
         QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         for (int i = 0; i < currentLevel; i++)
         {
             GameObject levelSelectionButton = Instantiate(buttonPrefab);
-            levelSelectionButton.transform.parent = gridParent.transform;
+            levelSelectionButton.SetActive(true);
+            levelSelectionButton.transform.SetParent(gridParent.transform,false);
             levelSelectionButton.GetComponent<RectTransform>().localScale = Vector3.one;
-            levelSelectionButton.GetComponentInChildren<Text>().text = "Level " + i;
+            levelSelectionButton.GetComponentInChildren<Text>().text = "Level " + (i+1);
             Button b = levelSelectionButton.GetComponent<Button>();
             int x = new int();
-            x = i;
+            x = i+1;
             b.onClick.AddListener(delegate () { LoadCreatedLevel(x); });
 
 

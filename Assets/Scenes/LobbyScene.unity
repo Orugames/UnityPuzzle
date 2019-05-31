@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -411,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.86236596, g: 0.84705883, b: 1, a: 0.7607843}
+  m_Color: {r: 0, g: 0.08923626, b: 1, a: 0.7607843}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -536,6 +536,7 @@ MonoBehaviour:
   cube19: {fileID: 1112306149979492614, guid: 8a17123a5aa6b8843b6810157b05d57e, type: 3}
   cube20: {fileID: 3784530686367965314, guid: 18ded9631de168f4a8fe013b4f5d2280, type: 3}
   prefabPicked: 0
+  singletonEnabled: 1
   levelSelected: 0
 --- !u!4 &512548285
 Transform:

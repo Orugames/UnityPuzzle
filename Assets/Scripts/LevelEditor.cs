@@ -94,17 +94,25 @@ public class LevelEditor : MonoBehaviour
         bool WorldPositionStayTheSame = false;
 
         Transform kid;
-        while (kid = a.GetChild(0))
-        {
+        /*while (kid = a.GetChild(0))
+        {         
             kid.SetParent(b, WorldPositionStayTheSame);
             cubes.Add(kid.GetComponent<Cube>());
+
+        }*/
+        for (int i = a.childCount - 1; i >= 0; --i)
+        {
+            Transform child = a.GetChild(i);
+            Debug.Log("moving object: " + child.name);
+            child.SetParent(b.transform, false);
         }
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Application.persistentDataPath);
+        //Debug.Log(Application.persistentDataPath);
         if (!initBool) Init();
 
 
@@ -203,7 +211,6 @@ public class LevelEditor : MonoBehaviour
     {
         QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
-        if (currentLevel == null) currentLevel = 0;
         currentLevel += 1;
         QuickSaveWriter quickSaveWriterCurrentLevel = QuickSaveWriter.Create("CurrentLevelValues" + currentLevel);
 
@@ -232,6 +239,8 @@ public class LevelEditor : MonoBehaviour
         quickSaveWriterCurrentLevel.Commit();
         quickSaveLevelWriter.Commit();
         Debug.Log("Saved data from level " + currentLevel);
+
+        levelText.text = "Saved level " + currentLevel;
     }
     public void LoadData()
     {
