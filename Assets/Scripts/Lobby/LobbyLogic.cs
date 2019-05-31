@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using CI.QuickSave;
 
@@ -18,9 +19,12 @@ public class LobbyLogic : MonoBehaviour
         {
             GameObject levelSelectionButton = Instantiate(buttonPrefab);
             levelSelectionButton.transform.parent = gridParent.transform;
+            levelSelectionButton.GetComponent<RectTransform>().localScale = Vector3.one;
             levelSelectionButton.GetComponentInChildren<Text>().text = "Level " + i;
             Button b = levelSelectionButton.GetComponent<Button>();
-            b.onClick.AddListener(delegate () { LoadCreatedLevel(i); });
+            int x = new int();
+            x = i;
+            b.onClick.AddListener(delegate () { LoadCreatedLevel(x); });
 
 
         }
@@ -29,13 +33,15 @@ public class LobbyLogic : MonoBehaviour
 
     public void LoadNewLevel()
     {
-        Application.LoadLevel(1);
+        SceneManager.LoadScene(1);
     }
     public void LoadCreatedLevel(int levelNumber)
     {
         Debug.Log("cargando info del nivel " + levelNumber);
-        LevelEditor.instance.LoadData(levelNumber);
-        Application.LoadLevel(1);
+        SceneManager.LoadScene(1);
+        SaveAndLoad.instance.LoadData(levelNumber);
+        this.enabled = false;
+
     }
 
 

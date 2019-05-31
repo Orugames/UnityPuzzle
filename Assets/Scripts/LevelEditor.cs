@@ -12,6 +12,7 @@ public class LevelEditor : MonoBehaviour
 
     public GameObject combinedSidePrefab;
     public GameObject cubeContainer;
+    public GameObject saveAndLoad;
     public GameObject prefab;
     public GameObject cube1;
     public GameObject cube2;
@@ -43,35 +44,58 @@ public class LevelEditor : MonoBehaviour
     public bool prefabReadyToTransform;
     public bool prefabRotate;
     public bool prefabReadyToRotate;
+    public bool initBool;
+    //public static LevelEditor instance = null;
 
-    public static LevelEditor instance = null;
+    //void Awake()
+    //{
+    //    //Check if instance already exists
+    //    if (instance == null)
 
-    void Awake()
+    //        //if not, set instance to this
+    //        instance = this;
+
+    //    //If instance already exists and it's not this:
+    //    else if (instance != this)
+
+    //        //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+    //        Destroy(gameObject);
+
+    //    //Sets this to not be destroyed when reloading scene
+    //    DontDestroyOnLoad(gameObject);
+    //}
+
+    private void Start()
     {
-        //Check if instance already exists
-        if (instance == null)
-
-            //if not, set instance to this
-            instance = this;
-
-        //If instance already exists and it's not this:
-        else if (instance != this)
-
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
-
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+        Init();
     }
-    void Start()
+    public void Init()
     {
+        saveAndLoad = GameObject.Find("Controllers");
 
+        initBool = true;
+        foreach (Transform child in saveAndLoad.transform)
+        {
+            Cube cube = child.GetComponent<Cube>();
+            cubes.Add(cube);
+            cube.UpdateCube();
+            child.SetParent(cubeContainer.transform);
+            foreach (Transform grandchild in cube.transform)
+            {
+                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(grandchild.GetComponent<CubeSide>());
+
+
+            }
+
+
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.Log(Application.persistentDataPath);
+         if (!initBool) Init();
 
 
         CheckForDuplicates();
