@@ -35,6 +35,7 @@ public class CubeSide : MonoBehaviour
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         GetComponent<Renderer>().material.color = cubeSideColor;
+        MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -44,11 +45,17 @@ public class CubeSide : MonoBehaviour
     }
     public void UpdateSide()
     {
+        cubeParent = transform.parent.GetComponent<Cube>();
         GetComponent<Renderer>().material.color = cubeSideColor;
         position = transform.position;
-        oposedNumber = oposedSide.number;
+        MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
+
+        if (oposedSide != null) {
+            oposedNumber = oposedSide.number;
+            oposedSideGO = oposedSide.gameObject;
+        }
+
         numberText.text = number.ToString();
-        oposedNumber = oposedSide.number;
         UpdateMarker();
         int x = (int)transform.position.x;
         int y = (int)transform.position.y;

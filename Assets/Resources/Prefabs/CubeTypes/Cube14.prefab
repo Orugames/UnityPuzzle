@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
+  position: {x: 0, y: 0}
   cubeCompleted: 0
   prefab: {fileID: 1885989786324993771}
   prefabNum: 14

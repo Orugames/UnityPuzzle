@@ -6,13 +6,14 @@ using UnityEngine;
 public class Cube : MonoBehaviour
 {
     public Color color;
+    public Vector2 position;
     public bool cubeCompleted;
     public GameObject prefab;
     public int prefabNum;
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
 
-    void Start()
+    public void Start()
     {
         color = new Color(
             UnityEngine.Random.Range(0f, 1f),
@@ -44,6 +45,7 @@ public class Cube : MonoBehaviour
     }
     public void UpdateCube()
     {
+        position = transform.position;
         cubeSidesNumbers.Clear();
         cubeSides.Clear();
         foreach (Transform child in transform)

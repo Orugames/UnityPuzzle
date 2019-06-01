@@ -63,6 +63,7 @@ public class SaveAndLoad : MonoBehaviour
     public void SaveData()
     {
         QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
+        
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         if (currentLevel == null) currentLevel = 0;
         currentLevel += 1;

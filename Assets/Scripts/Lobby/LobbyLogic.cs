@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using CI.QuickSave;
+using System.Collections;
+using System.IO;
+using ES3Internal;
 
 public class LobbyLogic : MonoBehaviour
 {
@@ -18,8 +21,10 @@ public class LobbyLogic : MonoBehaviour
         //quicksavelevelwriter.commit();
 
 
-
-
+        //if (ES3.FileExists("Level"))
+        //{
+        //    ES3.Load("MaxLevelsCreated", int);
+        //}
         QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         for (int i = 0; i < currentLevel; i++)
@@ -29,6 +34,7 @@ public class LobbyLogic : MonoBehaviour
             levelSelectionButton.transform.SetParent(gridParent.transform,false);
             levelSelectionButton.GetComponent<RectTransform>().localScale = Vector3.one;
             levelSelectionButton.GetComponentInChildren<Text>().text = "Level " + (i+1);
+            levelSelectionButton.name = (i+1).ToString();
             Button b = levelSelectionButton.GetComponent<Button>();
             int x = new int();
             x = i+1;
@@ -51,6 +57,13 @@ public class LobbyLogic : MonoBehaviour
         SaveAndLoad.instance.singletonEnabled = false;
         this.enabled = false;
 
+    }
+    public void DestroyLevel(GameObject button)
+    {
+        int level = int.Parse(button.name);
+        
+        
+        //File.Delete()
     }
 
 

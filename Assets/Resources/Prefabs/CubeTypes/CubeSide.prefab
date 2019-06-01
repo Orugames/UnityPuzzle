@@ -532,10 +532,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75654075e40957a4891579281997a8ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alreadyPositioned: 0
   number: 0
   oposedNumber: 0
+  cubeParent: {fileID: 0}
   cubeParents: []
   oposedSideGO: {fileID: 0}
+  similarCubeSide: {fileID: 0}
   oposedSide: {fileID: 0}
   MarkerGO: {fileID: 6217608352824436764}
   MarkerGORenderer: {fileID: 5653627038914321600}
@@ -545,6 +548,7 @@ MonoBehaviour:
   cubeSideColor: {r: 0, g: 0, b: 0, a: 0}
   fixedNumber: 0
   modifyValues: 0
+  combinedCube: 0
 --- !u!1001 &2695559187610824981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -557,6 +561,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Marker
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 494ccefdad8e1a94088922e6bbb1acff,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b7316d5d46bc214489b47a584f22d491, type: 2}
     - target: {fileID: -4216859302048453862, guid: 494ccefdad8e1a94088922e6bbb1acff,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -627,11 +636,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 50
       objectReference: {fileID: 0}
-    - target: {fileID: -1504981713932161579, guid: 494ccefdad8e1a94088922e6bbb1acff,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b7316d5d46bc214489b47a584f22d491, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 494ccefdad8e1a94088922e6bbb1acff, type: 3}
 --- !u!1 &6217608352824436764 stripped

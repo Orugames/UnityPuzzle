@@ -51,42 +51,24 @@ public class LevelEditor : MonoBehaviour
     public bool prefabErase;
     public bool initBool;
     public int levelSelected;
-    //public static LevelEditor instance = null;
-
-    //void Awake()
-    //{
-    //    //Check if instance already exists
-    //    if (instance == null)
-
-    //        //if not, set instance to this
-    //        instance = this;
-
-    //    //If instance already exists and it's not this:
-    //    else if (instance != this)
-
-    //        //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-    //        Destroy(gameObject);
-
-    //    //Sets this to not be destroyed when reloading scene
-    //    DontDestroyOnLoad(gameObject);
-    //}
+    public List<GameObject> cubesGO = new List<GameObject>();
 
     private void Start()
     {
-        Init();
+        //Init();
     }
     public void Init()
     {
-        saveAndLoad = GameObject.FindWithTag("Controllers");
+        /*saveAndLoad = GameObject.FindWithTag("Controllers");
         levelSelected = saveAndLoad.GetComponent<SaveAndLoad>().levelSelected;
 
         levelText.text = "Level " + levelSelected;
-        if (levelSelected == 0) levelText.text = "New Level";
+        if (levelSelected == 0) levelText.text = "New Level";*/
 
 
         initBool = true;
         //Invoke("AssingToOriginalParent",1);
-        TransferAllA2B(saveAndLoad.transform, cubeContainer.transform);
+        //TransferAllA2B(saveAndLoad.transform, cubeContainer.transform);
     }
 
     void TransferAllA2B(Transform a, Transform b)
@@ -112,19 +94,25 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(Application.persistentDataPath);
         if (!initBool) Init();
 
 
-        CheckForDuplicates();
-        OnMouseDown();
-        if (cubes == null || cubeSides == null)
-        {
-            return;
-        }
+        //if (cubes == null || cubeSides == null)
+        //{
+        //    return;
+        //}
+
+
+        cubes.Clear();
         cubeSides.Clear();
         cubeSidesGO.Clear();
-
+        foreach (Transform child in cubeContainer.transform)
+        {
+            Cube cube = child.GetComponent<Cube>();
+            cubes.Add(cube);
+            cubesGO.Add(child.gameObject);
+        }
+        OnMouseDown();
 
 
         foreach (Cube cube in cubes)
@@ -134,7 +122,7 @@ public class LevelEditor : MonoBehaviour
 
             foreach (Transform child in cube.transform)
             {
-                if (cubeSides.Count < cubes.Count * 6) cubeSides.Add(child.GetComponent<CubeSide>());
+                cubeSides.Add(child.GetComponent<CubeSide>());
 
 
             }
@@ -146,6 +134,8 @@ public class LevelEditor : MonoBehaviour
             cubeSidesGO.Add(side.gameObject);
         }
         cubeSides.TrimExcess();
+        cubes.TrimExcess();
+        CheckForDuplicates();
 
 
 
@@ -209,8 +199,42 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveData()
     {
-        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
-        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
+        int currentLevel = 0;
+        if (ES3.KeyExists("MaxLevelsCreated"))
+        {
+            currentLevel = ES3.Load<int>("MaxLevelsCreated");
+        }
+        else
+        {
+            ES3.Save<int>("MaxLevelsCreated",currentLevel = 0);
+        }
+        currentLevel += 1;
+
+        //ES3.Save<List<Cube>>("CubeList" + currentLevel, cubes);
+        //ES3.Save<List<CubeSide>>("CubeSides" + currentLevel,cubeSides);
+        ES3.Save<int>("MaxLevelsCreated", currentLevel);
+        //ES3.Save<List<GameObject>>("CubesGO" + currentLevel,cubesGO);
+
+        for (int i = 0; i < cubeContainer.transform.childCount; i++)
+        {
+            Transform child = cubeContainer.transform.GetChild(i);
+            ES3.Save<Cube>("Cube" + i + "Level" + currentLevel,child.GetComponent<Cube>()); //save each cube data
+            ES3.Save<int>("Cube" + i + "Level" + currentLevel + "Prefab",child.GetComponent<Cube>().prefabNum);
+
+            for (int j = 0; j < child.transform.childCount ; j++) //moving on the children of each cube
+            {
+                Transform grandchild = child.transform.GetChild(j);
+
+                ES3.Save<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, grandchild.GetComponent<CubeSide>());
+            }
+            ES3.Save<int>("NumberCubesLevel" + currentLevel, cubeContainer.transform.childCount);
+
+        }
+       
+
+
+        /*QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
+        //int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         currentLevel += 1;
         QuickSaveWriter quickSaveWriterCurrentLevel = QuickSaveWriter.Create("CurrentLevelValues" + currentLevel);
 
@@ -237,14 +261,66 @@ public class LevelEditor : MonoBehaviour
         quickSaveWriterCurrentLevel.Write("CubeCount", cubes.Count);
         quickSaveWriterCurrentLevel.Write("SidesCount", cubeSides.Count);
         quickSaveWriterCurrentLevel.Commit();
-        quickSaveLevelWriter.Commit();
+        quickSaveLevelWriter.Commit();*/
         Debug.Log("Saved data from level " + currentLevel);
 
         levelText.text = "Saved level " + currentLevel;
     }
     public void LoadData()
     {
-        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
+        int currentLevel = 0;
+        if (ES3.KeyExists("MaxLevelsCreated"))
+        {
+            currentLevel = ES3.Load<int>("MaxLevelsCreated");
+        }
+        else
+        {
+            ES3.Save<int>("MaxLevelsCreated", currentLevel = 0);
+        }
+
+        //cubes = ES3.Load<List<Cube>>("CubeList" + currentLevel);
+        //List<CubeSide> newCubeSides = ES3.Load<List<CubeSide>>("CubeSides" + currentLevel);
+        //cubesGO = ES3.Load<List<GameObject>>("CubesGO" + currentLevel);
+
+        int nCubes = ES3.Load<int>("NumberCubesLevel" + currentLevel);
+
+        for (int i = 0; i < nCubes; i++)
+        {
+            int prefabNum = ES3.Load<int>("Cube" + i + "Level" + currentLevel + "Prefab");
+            PickPrefabToPlace(prefabNum);
+            GameObject newCubeGO = Instantiate(prefab, cubeContainer.transform);
+            ES3.LoadInto<Cube>("Cube" + i + "Level" + currentLevel, newCubeGO.GetComponent<Cube>()); //we load the data onto a new cube component
+            newCubeGO.transform.position = newCubeGO.GetComponent<Cube>().position;
+
+            for (int j = 0; j < 6; j++)
+            {
+                //CubeSide newCubeside = newCubeGO.transform.GetChild(j).gameObject.GetComponent<CubeSide>();
+                //ES3.LoadInto<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, newCubeside);
+                ES3.LoadInto<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, newCubeGO.transform.GetChild(j).gameObject.GetComponent<CubeSide>());
+            }
+
+
+        }
+        /* for (int i = 0; i < cubes.Count; i++)
+         {
+             Vector3 cubePos = cubes[i].position;
+             int prefabNum = cubes[i].prefabNum;
+             PickPrefabToPlace(prefabNum); //this picks the prefabs stored here relative to the int
+             GameObject loadedCube = Instantiate(prefab, cubePos, Quaternion.identity);
+             loadedCube.transform.SetParent(cubeContainer.transform);
+             //cubes.Add(loadedCube.GetComponent<Cube>());
+
+             for (int j = 0; j < 6; j++)
+             {
+                 CubeSide side = loadedCube.transform.GetChild(j).GetComponent<CubeSide>();
+                 int sideValue = cubeSides[j + (i * 6)].number;
+                 side.number = sideValue;
+
+
+             }
+         }*/
+
+        /*QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
         int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
         QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + currentLevel);
 
@@ -267,13 +343,47 @@ public class LevelEditor : MonoBehaviour
                 loadedSidesValues.Add(readerLevelValues.Read<int>("Cube " + i + " Side " + j));
 
             }
-        }
+        }*/
 
-        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
+        //ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
     }
 
     public void LoadData(int levelSelection)
     {
+
+        int currentLevel = levelSelection;
+        if (ES3.KeyExists("MaxLevelsCreated"))
+        {
+            currentLevel = ES3.Load<int>("MaxLevelsCreated");
+        }
+        else
+        {
+            ES3.Save<int>("MaxLevelsCreated", currentLevel = 0);
+        }
+        cubes = ES3.Load<List<Cube>>("CubeList" + currentLevel);
+        //cubeSides = ES3.Load<List<CubeSide>>("CubeSides" + currentLevel);
+
+        for (int i = 0; i < cubes.Count; i++)
+        {
+            Vector3 cubePos = cubes[i].position;
+            int prefabNum = cubes[i].prefabNum;
+            PickPrefabToPlace(prefabNum); //this picks the prefabs stored here relative to the int
+            GameObject loadedCube = Instantiate(prefab, cubePos, Quaternion.identity);
+            loadedCube.transform.SetParent(cubeContainer.transform);
+            //cubes.Add(loadedCube.GetComponent<Cube>());
+
+            for (int j = 0; j < 6; j++)
+            {
+                CubeSide side = loadedCube.transform.GetChild(j).GetComponent<CubeSide>();
+                int sideValue = cubeSides[j + (i * 6)].number;
+                side.number = sideValue;
+
+
+            }
+        }
+
+
+        /*
         QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + levelSelection);
 
         int numberCubes = readerLevelValues.Read<int>("CubeCount");
@@ -284,7 +394,7 @@ public class LevelEditor : MonoBehaviour
         List<int> loadedSidesValues = new List<int>();
         Debug.Log("Loaded data from level " + levelSelection);
 
-
+        
         for (int i = 0; i < numberCubes; i++)
 
         {
@@ -297,7 +407,7 @@ public class LevelEditor : MonoBehaviour
             }
         }
 
-        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
+        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR*/
     }
 
 
@@ -310,6 +420,7 @@ public class LevelEditor : MonoBehaviour
             Vector3 cubePos = loadedCubesPos[i];
             int prefabNum = loadedPrefabNumbers[i];
             PickPrefabToPlace(prefabNum); //this picks the prefabs stored here relative to the int
+            prefabPicked = false;
             GameObject loadedCube = Instantiate(prefab, cubePos, Quaternion.identity);
             loadedCube.transform.SetParent(cubeContainer.transform);
             cubes.Add(loadedCube.GetComponent<Cube>());
