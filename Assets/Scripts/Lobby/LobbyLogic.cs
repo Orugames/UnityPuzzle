@@ -16,18 +16,17 @@ public class LobbyLogic : MonoBehaviour
 
     void Start()
     {
-        //quicksavewriter quicksavelevelwriter = quicksavewriter.create("level");
-        //quicksavelevelwriter.write("levelnumber", 0);
-        //quicksavelevelwriter.commit();
-
-
-        //if (ES3.FileExists("Level"))
-        //{
-        //    ES3.Load("MaxLevelsCreated", int);
-        //}
-        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
-        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
-        for (int i = 0; i < currentLevel; i++)
+        int maxLevels = 0;
+        if (ES3.KeyExists("MaxLevelsCreated"))
+        {
+            maxLevels = ES3.Load<int>("MaxLevelsCreated");
+        }
+        else
+        {
+            ES3.Save<int>("MaxLevelsCreated", maxLevels = 0);
+        }
+        
+        for (int i = 0; i < maxLevels; i++)
         {
             GameObject levelSelectionButton = Instantiate(buttonPrefab);
             levelSelectionButton.SetActive(true);
@@ -51,8 +50,9 @@ public class LobbyLogic : MonoBehaviour
     }
     public void LoadCreatedLevel(int levelNumber)
     {
-        Debug.Log("cargando info del nivel " + levelNumber);
+        Debug.Log("Load level " + levelNumber);
         SceneManager.LoadScene(1);
+
         SaveAndLoad.instance.LoadData(levelNumber);
         SaveAndLoad.instance.singletonEnabled = false;
         this.enabled = false;
@@ -72,67 +72,5 @@ public class LobbyLogic : MonoBehaviour
     {
         
     }
-    /*public void SaveData()
-    {
-        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
-        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
-        if (currentLevel == null) currentLevel = 0;
-        currentLevel += 1;
-        QuickSaveWriter quickSaveWriterCurrentLevel = QuickSaveWriter.Create("CurrentLevelValues" + currentLevel);
-
-        QuickSaveWriter quickSaveLevelWriter = QuickSaveWriter.Create("Level");
-
-        foreach (Cube cube in cubes)
-        {
-            quickSaveWriterCurrentLevel.Write("CubePos " + cubes.IndexOf(cube), cube.transform.position);
-            quickSaveWriterCurrentLevel.Write("CubePrefab " + cubes.IndexOf(cube), cube.prefabNum);
-
-            int i = 0;
-            foreach (Transform child in cube.transform)
-            {
-
-                CubeSide side = child.GetComponent<CubeSide>();
-                quickSaveWriterCurrentLevel.Write("Cube " + (cubes.IndexOf(cube)) + " Side " + i, side.number);
-                i++;
-
-            }
-        }
-
-        quickSaveLevelWriter.Write("LevelNumber", currentLevel);
-
-        quickSaveWriterCurrentLevel.Write("CubeCount", cubes.Count);
-        quickSaveWriterCurrentLevel.Write("SidesCount", cubeSides.Count);
-        quickSaveWriterCurrentLevel.Commit();
-        quickSaveLevelWriter.Commit();
-        Debug.Log("Saved data from level " + currentLevel);
-    }
-    public void LoadData()
-    {
-        QuickSaveReader loaderNumberOfLevels = QuickSaveReader.Create("Level");
-        int currentLevel = loaderNumberOfLevels.Read<int>("LevelNumber");
-        QuickSaveReader readerLevelValues = QuickSaveReader.Create("CurrentLevelValues" + currentLevel);
-
-        int numberCubes = readerLevelValues.Read<int>("CubeCount");
-        int numberOfSides = readerLevelValues.Read<int>("SidesCount");
-
-        List<Vector3> loadedCubesPos = new List<Vector3>();
-        List<int> loadedPrefabNumbers = new List<int>();
-        List<int> loadedSidesValues = new List<int>();
-        Debug.Log("Loaded data from level " + currentLevel);
-
-
-        for (int i = 0; i < numberCubes; i++)
-
-        {
-            loadedPrefabNumbers.Add(readerLevelValues.Read<int>("CubePrefab " + i));
-            loadedCubesPos.Add(readerLevelValues.Read<Vector3>("CubePos " + i));
-            for (int j = 0; j < 6; j++)
-            {
-                loadedSidesValues.Add(readerLevelValues.Read<int>("Cube " + i + " Side " + j));
-
-            }
-        }
-
-        ReloadObjectsData(numberCubes, numberOfSides, loadedCubesPos, loadedPrefabNumbers, loadedSidesValues); //NEEDS HEAVY REFACTOR
-    }*/
+   
 }
