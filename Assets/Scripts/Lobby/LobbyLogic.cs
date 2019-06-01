@@ -7,15 +7,17 @@ using CI.QuickSave;
 using System.Collections;
 using System.IO;
 using ES3Internal;
+using TMPro;
 
 public class LobbyLogic : MonoBehaviour
 {
     string levelSelected;
     public GameObject gridParent;
     public GameObject buttonPrefab;
-
+    public List<GameObject> levelsButtons = new List<GameObject>();
     void Start()
     {
+        levelsButtons.Clear();
         int maxLevels = 0;
         if (ES3.KeyExists("MaxLevelsCreated"))
         {
@@ -32,11 +34,17 @@ public class LobbyLogic : MonoBehaviour
             levelSelectionButton.SetActive(true);
             levelSelectionButton.transform.SetParent(gridParent.transform,false);
             levelSelectionButton.GetComponent<RectTransform>().localScale = Vector3.one;
-            levelSelectionButton.GetComponentInChildren<Text>().text = "Level " + (i+1);
+            levelSelectionButton.GetComponentInChildren<TextMeshProUGUI>().text = "Level " + (i+1);
+            levelsButtons.Add(levelSelectionButton);
             levelSelectionButton.name = (i+1).ToString();
             Button b = levelSelectionButton.GetComponent<Button>();
-            int x = new int();
+
+            Button deleteButton = levelSelectionButton.transform.GetChild(1).GetComponent<Button>();
+            int x;
             x = i+1;
+            
+            deleteButton.onClick.AddListener(delegate () { DestroyLevel(x.ToString()); }); //BUG of delegates
+
             b.onClick.AddListener(delegate () { LoadCreatedLevel(x); });
 
 
@@ -58,12 +66,36 @@ public class LobbyLogic : MonoBehaviour
         this.enabled = false;
 
     }
-    public void DestroyLevel(GameObject button)
+    public void DestroyLevel(string levelNumberString)
     {
-        int level = int.Parse(button.name);
+        //We delete each entry of a saved level
+        int levelNumber = int.Parse(levelNumberString); //BUG
+        Debug.Log("Destroy level " + levelNumber);
+
+        int nCubes = ES3.Load<int>("NumberCubesLevel" + levelNumber);
+
+        for (int i = 0; i < nCubes; i++)
+        {
+            ES3.DeleteKey("Cube" + i + "Level" + levelNumber + "Prefab");
+            ES3.DeleteKey("Cube" + i + "Level" + levelNumber);
+            for (int j = 0; j < 6; j++)
+            {
+
+                ES3.DeleteKey("CubeSide" + j + "Cube" + i + "Level" + levelNumber);
+            }
+        }
+        ES3.DeleteKey("NumberCubesLevel" + levelNumber);
+
+        //We -1 the maxlevels created so we have one button less
+        int maxLevels = ES3.Load<int>("MaxLevelsCreated");
+        maxLevels -= 1;
+        ES3.Save<int>("MaxLevelsCreated",maxLevels);
+
+        GameObject buttonToRemoveGO = levelsButtons[levelNumber];
+        levelsButtons.Remove(levelsButtons[levelNumber]);
+        levelsButtons.TrimExcess();
+        Destroy(buttonToRemoveGO);
         
-        
-        //File.Delete()
     }
 
 

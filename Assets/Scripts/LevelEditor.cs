@@ -216,11 +216,8 @@ public class LevelEditor : MonoBehaviour
             ES3.Save<int>("MaxLevelsCreated",currentLevel = 0);
         }
         currentLevel += 1;
-
-        //ES3.Save<List<Cube>>("CubeList" + currentLevel, cubes);
-        //ES3.Save<List<CubeSide>>("CubeSides" + currentLevel,cubeSides);
+        
         ES3.Save<int>("MaxLevelsCreated", currentLevel);
-        //ES3.Save<List<GameObject>>("CubesGO" + currentLevel,cubesGO);
 
         for (int i = 0; i < cubeContainer.transform.childCount; i++)
         {

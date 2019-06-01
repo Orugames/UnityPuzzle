@@ -325,8 +325,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -561,11 +561,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Marker
       objectReference: {fileID: 0}
-    - target: {fileID: -1504981713932161579, guid: 494ccefdad8e1a94088922e6bbb1acff,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b7316d5d46bc214489b47a584f22d491, type: 2}
     - target: {fileID: -4216859302048453862, guid: 494ccefdad8e1a94088922e6bbb1acff,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -636,6 +631,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 494ccefdad8e1a94088922e6bbb1acff,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b7316d5d46bc214489b47a584f22d491, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 494ccefdad8e1a94088922e6bbb1acff, type: 3}
 --- !u!1 &6217608352824436764 stripped

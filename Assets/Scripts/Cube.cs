@@ -15,11 +15,13 @@ public class Cube : MonoBehaviour
 
     public void Start()
     {
-        color = new Color(
+        /*color = new Color(
             UnityEngine.Random.Range(0f, 1f),
             UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f));
+            UnityEngine.Random.Range(0f, 1f));*/
 
+        color = new Color();
+        color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1);
         foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());
