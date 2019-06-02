@@ -98,11 +98,7 @@ public class LevelEditor : MonoBehaviour
     {
         if (!initBool) Init();
 
-
-        //if (cubes == null || cubeSides == null)
-        //{
-        //    return;
-        //}
+        
 
         if (GameObject.Find("CubeContainer") == null)
         {
@@ -122,7 +118,6 @@ public class LevelEditor : MonoBehaviour
             cubesGO.Add(child.gameObject);
         }
         OnMouseDown();
-
 
         foreach (Cube cube in cubes)
         {
@@ -144,7 +139,7 @@ public class LevelEditor : MonoBehaviour
         }
         cubeSides.TrimExcess();
         cubes.TrimExcess();
-        CheckForDuplicates();
+        //CheckForDuplicates();
 
 
 
@@ -212,19 +207,20 @@ public class LevelEditor : MonoBehaviour
 
     public void SaveData()
     {
-        int currentLevel = 0;
-        if (ES3.KeyExists("MaxLevelsCreated"))
+        //levelSelected = SaveAndLoad.instance.levelSelected;
+
+        int currentLevel = SaveAndLoad.instance.levelSelected;
+
+        if (currentLevel == 0)
         {
             currentLevel = ES3.Load<int>("MaxLevelsCreated");
-        }
-        else
-        {
-            ES3.Save<int>("MaxLevelsCreated",currentLevel = 0);
-        }
-        currentLevel += 1;
-        
-        ES3.Save<int>("MaxLevelsCreated", currentLevel);
+            currentLevel += 1;
+            SaveAndLoad.instance.levelSelected = currentLevel;
 
+            ES3.Save<int>("MaxLevelsCreated", currentLevel);
+        }
+
+        //With this code a new created level has the last spot on the list, if not then it overwrites the level selected
         for (int i = 0; i < cubeContainer.transform.childCount; i++)
         {
             Transform child = cubeContainer.transform.GetChild(i);
@@ -240,8 +236,6 @@ public class LevelEditor : MonoBehaviour
             ES3.Save<int>("NumberCubesLevel" + currentLevel, cubeContainer.transform.childCount);
 
         }
-       
-
 
         Debug.Log("Saved data from level " + currentLevel);
 
@@ -249,15 +243,8 @@ public class LevelEditor : MonoBehaviour
     }
     public void LoadData()
     {
-        int currentLevel = 0;
-        if (ES3.KeyExists("MaxLevelsCreated"))
-        {
-            currentLevel = ES3.Load<int>("MaxLevelsCreated");
-        }
-        else
-        {
-            ES3.Save<int>("MaxLevelsCreated", currentLevel = 0);
-        }
+        int currentLevel = SaveAndLoad.instance.levelSelected;
+        
         
         int nCubes = ES3.Load<int>("NumberCubesLevel" + currentLevel);
 
@@ -447,7 +434,13 @@ public class LevelEditor : MonoBehaviour
     }
 
 
-    private void CheckForDuplicates()
+    public void CheckForDuplicates()
+    {
+        CombineSides();
+        DivideSides();
+    }
+
+    private void CombineSides()
     {
         for (var i = 0; i < cubeSides.Count - 1; i++)
         {
@@ -476,6 +469,38 @@ public class LevelEditor : MonoBehaviour
 
 
                 }
+            }
+        }
+    }
+
+    private void DivideSides()
+    {
+        for (var i = 0; i < cubeSides.Count - 1; i++)
+        {
+            for (var k = i + 1; k < cubeSides.Count; k++)
+            {
+                var distance = Vector3.Distance(cubeSides[i].transform.position, cubeSides[k].transform.position);
+
+                if (cubeSides[i].combinedCube && cubeSides[k].combinedCube)
+                {
+                    if (cubeSides[i].similarCubeSide == cubeSides[k] && cubeSides[k].similarCubeSide == cubeSides[i] && distance > 0.1f) //If each of them share the oposed side logic
+                    {
+                        cubeSides[i].combinedCube = false;
+                        cubeSides[k].combinedCube = false;
+                        cubeSides[i].cubeParents.Clear();
+                        cubeSides[k].cubeParents.Clear();
+
+                        cubeSides[i].similarCubeSide = null;
+                        cubeSides[k].similarCubeSide = null;
+
+                        cubeSides[i].GetComponent<MeshRenderer>().enabled = true;
+                        cubeSides[i].GetComponent<BoxCollider>().enabled = true;
+                        cubeSides[k].GetComponent<MeshRenderer>().enabled = true;
+                        cubeSides[k].GetComponent<BoxCollider>().enabled = true;
+                    }
+                }
+               
+                
             }
         }
     }
@@ -606,6 +631,7 @@ public class LevelEditor : MonoBehaviour
         }
         Destroy(GameObject.FindWithTag("Controllers"));
         SceneManager.LoadScene(0);
+        SaveAndLoad.instance.levelSelected = 0;
     }
     public void ClearStage()
     {

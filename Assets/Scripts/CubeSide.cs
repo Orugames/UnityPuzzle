@@ -47,6 +47,7 @@ public class CubeSide : MonoBehaviour
     public void UpdateSide()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
+        cubeSideColor = cubeParent.color;
         GetComponent<Renderer>().material.color = cubeSideColor;
         numberText.color = Color.black;
         position = transform.position;
