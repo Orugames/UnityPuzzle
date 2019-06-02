@@ -28,6 +28,7 @@ public class LobbyLogic : MonoBehaviour
             ES3.Save<int>("MaxLevelsCreated", maxLevels = 0);
         }
         Debug.Log("Maxlevels" + maxLevels);
+
         for (int i = 0; i < maxLevels; i++)
         {
             GameObject levelSelectionButton = Instantiate(buttonPrefab);
@@ -42,7 +43,23 @@ public class LobbyLogic : MonoBehaviour
             Button deleteButton = levelSelectionButton.transform.GetChild(1).GetComponent<Button>();
             int x;
             x = i+1;
-            
+            Texture2D levelImageText = ES3.LoadImage("CameraScreenshotLevel" + x + ".png");
+            Rect rect = new Rect(0, 0, 1000, 1000);
+            Sprite sprite = Sprite.Create(levelImageText, rect, Vector2.zero, 1000);
+
+            levelSelectionButton.transform.GetChild(2).GetComponent<Image>().sprite = sprite;
+            /*if (ES3.KeyExists("CameraScreenshotLevel" + (i+1) + ".png"))
+            {
+                Debug.Log("existe esto");
+                //Texture2D levelImageText = ES3.LoadImage("CameraScreenshotLevel" + i + ".png");
+                Rect rect = new Rect(0, 0, 1000, 1000);
+                Sprite sprite = Sprite.Create(levelImageText, rect, Vector2.zero, 1000);
+
+                levelSelectionButton.transform.GetChild(2).GetComponent<Image>().sprite = sprite;
+
+            }*/
+
+
             deleteButton.onClick.AddListener(delegate () { UpdateSaveLevels(x); }); //BUG of delegates
 
             b.onClick.AddListener(delegate () { LoadCreatedLevel(x); });
