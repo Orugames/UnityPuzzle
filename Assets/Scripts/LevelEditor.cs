@@ -133,7 +133,7 @@ public class LevelEditor : MonoBehaviour
         }
         cubeSides.TrimExcess();
         cubes.TrimExcess();
-
+        levelSelected = SaveAndLoad.instance.levelSelected;
 
 
 
@@ -514,8 +514,8 @@ public class LevelEditor : MonoBehaviour
         hideValuesBool = !hideValuesBool;
         foreach(CubeSide cubeSide in cubeSides)
         {
-            if (cubeSide.fixedNumber) cubeSide.hideNumbers = cubeSide.hideNumbers;
-            cubeSide.hideNumbers = hideValuesBool;
+            if (!cubeSide.fixedNumber) cubeSide.hideNumbers = hideValuesBool;
+
         }
     }
 
@@ -607,8 +607,8 @@ public class LevelEditor : MonoBehaviour
 
     public void GoToLobby()
     {
-        ScreenshotHandler.TakeScreenshot_Static(1000, 1000);
-        Invoke("GoToLobbyAfterScreenShot",0.01f);
+        ScreenshotHandler.TakeScreenshot_Static(1000, 1000,levelSelected);
+        Invoke("GoToLobbyAfterScreenShot",0.09f);
     }
 
     private void GoToLobbyAfterScreenShot()
