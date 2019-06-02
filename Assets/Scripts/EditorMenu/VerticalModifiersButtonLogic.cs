@@ -30,14 +30,14 @@ public class VerticalModifiersButtonLogic : MonoBehaviour
 
         if (expanded)
         {
-            thisRectTrans.DOAnchorPos3DY(-25, 1).OnComplete(() => {
+            thisRectTrans.DOAnchorPos3DY(-25, 0.5f).OnComplete(() => {
                 expanded = false;
                 transitioning = false;
             });
         }
         else
         {
-            thisRectTrans.DOAnchorPos3DY(-160, 1).OnComplete(() => {
+            thisRectTrans.DOAnchorPos3DY(-160, 0.5f).OnComplete(() => {
                 expanded = true;
                 transitioning = false;
             });

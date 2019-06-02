@@ -28,14 +28,14 @@ public class HorizontalPrefabButtonsLogic : MonoBehaviour
 
         if (expanded)
         {
-            thisRectTrans.DOAnchorPos3DX(-20, 1).OnComplete(() =>{
+            thisRectTrans.DOAnchorPos3DX(-20, 0.5f).OnComplete(() =>{
                 expanded = false;
                 transitioning = false;
             });
         }
         else
         {
-            thisRectTrans.DOAnchorPos3DX(-190, 1).OnComplete(() => {
+            thisRectTrans.DOAnchorPos3DX(-190, 0.5f).OnComplete(() => {
                 expanded = true;
                 transitioning = false;
             });

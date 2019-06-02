@@ -54,7 +54,6 @@ public class LevelEditor : MonoBehaviour
     public bool initBool;
     public int levelSelected;
     public List<GameObject> cubesGO = new List<GameObject>();
-
     List<Color> presetColors = new List<Color>{ Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
 
 
@@ -459,7 +458,7 @@ public class LevelEditor : MonoBehaviour
                     cubeSides[i].similarCubeSide = cubeSides[k];
                     cubeSides[k].similarCubeSide = cubeSides[i];
 
-                    cubeSides[k].GetComponent<MeshRenderer>().enabled = false;
+                    cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
                     cubeSides[k].GetComponent<BoxCollider>().enabled = false;
 
 
@@ -489,9 +488,9 @@ public class LevelEditor : MonoBehaviour
                         cubeSides[i].similarCubeSide = null;
                         cubeSides[k].similarCubeSide = null;
 
-                        cubeSides[i].GetComponent<MeshRenderer>().enabled = true;
+                        cubeSides[i].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
                         cubeSides[i].GetComponent<BoxCollider>().enabled = true;
-                        cubeSides[k].GetComponent<MeshRenderer>().enabled = true;
+                        cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
                         cubeSides[k].GetComponent<BoxCollider>().enabled = true;
                     }
                 }
@@ -608,6 +607,12 @@ public class LevelEditor : MonoBehaviour
 
     public void GoToLobby()
     {
+        ScreenshotHandler.TakeScreenshot_Static(1000, 1000);
+        Invoke("GoToLobbyAfterScreenShot",0.01f);
+    }
+
+    private void GoToLobbyAfterScreenShot()
+    {
         foreach (Transform child in cubeContainer.transform)
         {
             Destroy(child.gameObject);
@@ -616,6 +621,7 @@ public class LevelEditor : MonoBehaviour
         SceneManager.LoadScene(0);
         SaveAndLoad.instance.levelSelected = 0;
     }
+
     public void ClearStage()
     {
         cubes.Clear();

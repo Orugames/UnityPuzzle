@@ -81,5 +81,5 @@ Material:
     - _CellColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 0.935151, g: 0.9705882, b: 0.3282872, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LineColor: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0.38431373}
     - _SelectedColor: {r: 0.1586206, g: 1, b: 0, a: 1}
