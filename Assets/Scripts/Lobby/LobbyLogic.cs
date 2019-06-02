@@ -154,8 +154,10 @@ public class LobbyLogic : MonoBehaviour
         {
             nCubes = ES3.Load<int>("NumberCubesLevel" + (k+1));
             ES3.Save<int>("NumberCubesLevel" + k, nCubes);
+            Texture2D levelImageText = ES3.LoadImage("CameraScreenshotLevel" + (k+1) + ".png");
+            ES3.SaveImage(levelImageText,"CameraScreenshotLevel" + k + ".png");
 
-            for (int i = 0; i < nCubes; i++)
+        for (int i = 0; i < nCubes; i++)
             {
                 int prefabNum = ES3.Load<int>("Cube" + i + "Level" + (k + 1) + "Prefab");
                 ES3.Save<int>("Cube" + i + "Level" + k + "Prefab", prefabNum);
