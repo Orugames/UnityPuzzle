@@ -57,20 +57,12 @@ public class LevelEditor : MonoBehaviour
 
     private void Start()
     {
-        //Init();
     }
     public void Init()
     {
-        /*saveAndLoad = GameObject.FindWithTag("Controllers");
-        levelSelected = saveAndLoad.GetComponent<SaveAndLoad>().levelSelected;
 
-        levelText.text = "Level " + levelSelected;
-        if (levelSelected == 0) levelText.text = "New Level";*/
-
-
+        if (SaveAndLoad.instance.levelSelected == 0) levelText.text = "Level " + (ES3.Load<int>("MaxLevelsCreated") + 1);
         initBool = true;
-        //Invoke("AssingToOriginalParent",1);
-        //TransferAllA2B(saveAndLoad.transform, cubeContainer.transform);
     }
 
     void TransferAllA2B(Transform a, Transform b)
@@ -425,6 +417,13 @@ public class LevelEditor : MonoBehaviour
                 {
 
                     cubeSelected.transform.Rotate(cubeSelected.transform.forward, 90);
+
+                    foreach (Transform child in cubeSelected.transform) //keep numbers upwards
+                    {
+                        CubeSide cubeSide = child.GetComponent<CubeSide>();
+                        cubeSide.numberText.transform.Rotate(cubeSelected.transform.forward, -90);
+                        //cubeSide.posText.transform.Rotate(cubeSelected.transform.forward, -90);
+                    }
                     //prefabRotate = false;
                     prefabReadyToRotate = false;
                 }

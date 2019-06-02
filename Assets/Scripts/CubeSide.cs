@@ -35,7 +35,8 @@ public class CubeSide : MonoBehaviour
     void Start()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
-        GetComponent<Renderer>().material.color = cubeSideColor;
+        //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
+        MarkerGORenderer.material.color = cubeSideColor;
         MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
     }
 
@@ -48,8 +49,11 @@ public class CubeSide : MonoBehaviour
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         cubeSideColor = cubeParent.color;
-        GetComponent<Renderer>().material.color = cubeSideColor;
-        numberText.color = Color.black;
+        //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
+
+        MarkerGORenderer.material.color = cubeSideColor;
+        numberText.color = Color.white;
+        posText.color = Color.black;
         position = transform.position;
         MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
 
@@ -94,7 +98,8 @@ public class CubeSide : MonoBehaviour
         if (combinedCube)
         {
             cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
-            GetComponent<Renderer>().material.color = cubeSideColor;
+            //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
+            MarkerGORenderer.material.color = cubeSideColor;
             similarCubeSide.number = number;
 
 
@@ -106,13 +111,14 @@ public class CubeSide : MonoBehaviour
         if (cubeParent != null)
             if (!cubeParent.cubeCompleted)
             {
-                MarkerGORenderer.material.color = Color.red * 0.8f;
+                //MarkerGORenderer.material.color = Color.black + Color.white * 0.8f;
                 //numberText.color = Color.black;
                 //posText.color = Color.black;
 }
             else
             {
-                MarkerGORenderer.material.color = Color.blue;
+                MarkerGORenderer.material.color = (Color.white + Color.green) * 0.7f;
+                posText.color = Color.green;
                 //numberText.color = Color.green/2;
                 //posText.color = Color.green/2;
             }
