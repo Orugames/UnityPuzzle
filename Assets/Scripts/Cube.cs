@@ -12,6 +12,8 @@ public class Cube : MonoBehaviour
     public int prefabNum;
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
+    public List<Color> presetColors = new List<Color> { Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
+
 
     public void Start()
     {
@@ -21,9 +23,8 @@ public class Cube : MonoBehaviour
             UnityEngine.Random.Range(0f, 1f));*/
 
         color = new Color();
-        Color[] presetColors = {Color.red, Color.green, Color.blue,Color.cyan,Color.magenta,Color.yellow};
 
-        color = presetColors[UnityEngine.Random.Range(0, 6)];
+        color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
         foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());

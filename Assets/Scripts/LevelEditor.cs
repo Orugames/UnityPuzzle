@@ -55,6 +55,9 @@ public class LevelEditor : MonoBehaviour
     public int levelSelected;
     public List<GameObject> cubesGO = new List<GameObject>();
 
+    List<Color> presetColors = new List<Color>{ Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
+
+
     private void Start()
     {
     }
@@ -131,7 +134,8 @@ public class LevelEditor : MonoBehaviour
         }
         cubeSides.TrimExcess();
         cubes.TrimExcess();
-        //CheckForDuplicates();
+
+
 
 
 
@@ -166,6 +170,7 @@ public class LevelEditor : MonoBehaviour
                     newCube.transform.parent = cubeContainer.transform;
 
                     cubes.Add(newCube.GetComponent<Cube>());
+                    CheckAvaibleColors();
                     /*foreach (Transform child in newCube.transform)
                     {
                         cubeSides.Add(child.GetComponent<CubeSide>());
@@ -195,7 +200,23 @@ public class LevelEditor : MonoBehaviour
         }
     }
 
-    
+    private void CheckAvaibleColors()
+    {
+        foreach (Cube cube in cubes)
+        {
+            int numberToRemove;
+            for (int i = 0; i < presetColors.Count; i++)
+            {
+                if (cube.color == presetColors[i])
+                {
+                    numberToRemove = i;
+                    presetColors.Remove(presetColors[i]);
+                    presetColors.TrimExcess();
+                }
+            }
+            cube.presetColors = presetColors;
+        }
+    }
 
     public void SaveData()
     {
@@ -297,30 +318,6 @@ public class LevelEditor : MonoBehaviour
 
 
 
-    void HologramCubeTransform()
-    {
-        if (prefabReadyToTransform)
-        {
-            //If we clicked a cube, we see and move its hologram
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.name is "LevelEditor")
-                {
-                    return;
-                }
-                cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
-                Debug.Log(cubeSelected.name);
-                Vector3 rounded;
-                rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
-                rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
-                rounded.z = 0;
-                cubeSelected.transform.position = rounded;
-
-            }
-        }
-    }
 
     private void MakeFixedNumbersLogic()
     {
@@ -504,19 +501,6 @@ public class LevelEditor : MonoBehaviour
         }
     }
 
-    public int GetRepetitions(string[] myList, string value)
-    {
-        int repetitions = 0;
-        for (int i = 0; i < myList.Length; i++)
-        {
-            if ((myList[i] == value) && ((i == 0 ? false : myList[i - 1] == value) ||
-                 (i == myList.Length - 1 ? false : myList[i + 1] == value)))
-            {
-                repetitions++;
-            }
-        }
-        return repetitions;
-    }
 
     public void ModifyValuesToggle()
     {

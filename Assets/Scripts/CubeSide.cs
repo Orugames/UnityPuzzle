@@ -80,8 +80,8 @@ public class CubeSide : MonoBehaviour
         if (fixedNumber)
         {
             //we keep the value but still hide the rest
-            GetComponent<Renderer>().material.color = Color.black;
-            numberText.color = Color.white;
+            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.white * 0.5f;
+            numberText.color = Color.black;
 
         }
         //Logic if the numbers must be hidden
@@ -117,7 +117,7 @@ public class CubeSide : MonoBehaviour
 }
             else
             {
-                MarkerGORenderer.material.color = (Color.white + Color.green) * 0.7f;
+                //MarkerGORenderer.material.color = (Color.white + Color.green) * 0.7f;
                 posText.color = Color.green;
                 //numberText.color = Color.green/2;
                 //posText.color = Color.green/2;
