@@ -84,7 +84,7 @@ public class CubeSide : MonoBehaviour
         if (cubeParent != null)
             if (!cubeParent.cubeCompleted)
             {
-                MarkerGORenderer.material.color = Color.red;
+                MarkerGORenderer.material.color = Color.white;
             }
             else
             {

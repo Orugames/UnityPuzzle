@@ -21,7 +21,9 @@ public class Cube : MonoBehaviour
             UnityEngine.Random.Range(0f, 1f));*/
 
         color = new Color();
-        color = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), 1, 1);
+        Color[] presetColors = {Color.red, Color.green, Color.blue,Color.cyan,Color.magenta,Color.yellow};
+
+        color = presetColors[UnityEngine.Random.Range(0, 6)];
         foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());

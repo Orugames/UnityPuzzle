@@ -111,7 +111,7 @@ public class LobbyLogic : MonoBehaviour
 
         int nCubes;
         GameObject buttonToRemoveGO;
-        if (LevelToDelete == maxLevels)
+        if (LevelToDelete == maxLevels) //if we destroy the last level on the list
         {
             Debug.Log("Nivel elegido para borrar es el ultimo");
 
