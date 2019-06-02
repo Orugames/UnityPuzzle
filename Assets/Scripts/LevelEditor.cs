@@ -43,12 +43,14 @@ public class LevelEditor : MonoBehaviour
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<GameObject> cubeSidesGO = new List<GameObject>();
     public bool modifyValuesBool;
+    public bool hideValuesBool;
     public bool prefabPicked;
     public bool prefabTransform;
     public bool prefabReadyToTransform;
     public bool prefabRotate;
     public bool prefabReadyToRotate;
     public bool prefabErase;
+    public bool makeFixedNumbers;
     public bool initBool;
     public int levelSelected;
     public List<GameObject> cubesGO = new List<GameObject>();
@@ -200,9 +202,13 @@ public class LevelEditor : MonoBehaviour
         {
             EraseCubeLogic();
         }
-
+        if (makeFixedNumbers)
+        {
+            MakeFixedNumbersLogic();
+        }
     }
 
+    
 
     public void SaveData()
     {
@@ -334,6 +340,28 @@ public class LevelEditor : MonoBehaviour
                 cubeSelected.transform.position = rounded;
 
             }
+        }
+    }
+
+    private void MakeFixedNumbersLogic()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name is "LevelEditor")
+                {
+                    return;
+                }
+                CubeSide cubeSideSelected = hit.collider.GetComponent<CubeSide>();
+
+                
+                cubeSideSelected.fixedNumber = !cubeSideSelected.fixedNumber; //toggle the fixed value
+            }
+            
         }
     }
 
@@ -474,6 +502,15 @@ public class LevelEditor : MonoBehaviour
             cubeSide.modifyValues = modifyValuesBool;
         }
     }
+    public void HideValuesToggle()
+    {
+        hideValuesBool = !hideValuesBool;
+        foreach(CubeSide cubeSide in cubeSides)
+        {
+            if (cubeSide.fixedNumber) cubeSide.hideNumbers = cubeSide.hideNumbers;
+            cubeSide.hideNumbers = hideValuesBool;
+        }
+    }
 
     public void PickPrefabToPlace(int selection)
     {
@@ -555,6 +592,12 @@ public class LevelEditor : MonoBehaviour
     {
         prefabErase = !prefabErase;
     }
+    public void MakeFixedNumbers()
+    {
+        makeFixedNumbers = !makeFixedNumbers;
+    }
+
+
     public void GoToLobby()
     {
         foreach (Transform child in cubeContainer.transform)

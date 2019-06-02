@@ -23,6 +23,7 @@ public class CubeSide : MonoBehaviour
     public bool fixedNumber;
     public bool modifyValues;
     public bool combinedCube;
+    public bool hideNumbers;
 
 
 
@@ -47,6 +48,7 @@ public class CubeSide : MonoBehaviour
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         GetComponent<Renderer>().material.color = cubeSideColor;
+        numberText.color = Color.black;
         position = transform.position;
         MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
 
@@ -62,13 +64,32 @@ public class CubeSide : MonoBehaviour
         posText.text = x.ToString() + "," + y.ToString();
         posText.name = x.ToString() + "," + y.ToString();
         name = "Cubeside " + posText.text;
+        //If the number is not between 1 and 6
         if (number > 6 || number <= 0)
         {
             number = 0;
             numberText.text = "";
             //numberText.text = posText.text;
         }
+        //Logic if the number is fixed
+        if (fixedNumber)
+        {
+            //we keep the value but still hide the rest
+            GetComponent<Renderer>().material.color = Color.black;
+            numberText.color = Color.white;
 
+        }
+        //Logic if the numbers must be hidden
+        numberText.renderer.enabled = true;
+        numberText.alpha = 255;
+
+        if (hideNumbers && !fixedNumber)
+        {
+            numberText.renderer.enabled = false;
+            numberText.alpha = 0;
+        }
+        
+        //Logic if the side is combination of two cubes
         if (combinedCube)
         {
             cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
@@ -84,19 +105,22 @@ public class CubeSide : MonoBehaviour
         if (cubeParent != null)
             if (!cubeParent.cubeCompleted)
             {
-                MarkerGORenderer.material.color = Color.white;
-            }
+                MarkerGORenderer.material.color = Color.red * 0.8f;
+                //numberText.color = Color.black;
+                //posText.color = Color.black;
+}
             else
             {
-                MarkerGORenderer.material.color = Color.green;
-
+                MarkerGORenderer.material.color = Color.blue;
+                //numberText.color = Color.green/2;
+                //posText.color = Color.green/2;
             }
         
     }
 
     private void OnMouseDown()
     {
-        if (Input.GetMouseButtonDown(0) && modifyValues)
+        if (Input.GetMouseButtonDown(0) && modifyValues && !fixedNumber)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
