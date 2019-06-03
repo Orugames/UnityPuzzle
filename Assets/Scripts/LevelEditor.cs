@@ -59,12 +59,21 @@ public class LevelEditor : MonoBehaviour
 
     private void Start()
     {
+        Init();
     }
     public void Init()
     {
 
         if (SaveAndLoad.instance.levelSelected == 0) levelText.text = "Level " + (ES3.Load<int>("MaxLevelsCreated") + 1);
         initBool = true;
+
+        if (GameObject.Find("CubeContainer") == null)
+        {
+            cubeContainer = new GameObject();
+            cubeContainer.name = "CubeContainer";
+        }
+        else cubeContainer = GameObject.Find("CubeContainer");
+        UpdateLevel();
     }
 
     void TransferAllA2B(Transform a, Transform b)
@@ -88,30 +97,35 @@ public class LevelEditor : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void UpdateLevel()
     {
         if (!initBool) Init();
 
-        
-
-        if (GameObject.Find("CubeContainer") == null)
-        {
-            cubeContainer = new GameObject();
-            cubeContainer.name = "CubeContainer";
-        }
-        else cubeContainer = GameObject.Find("CubeContainer");
+        UpdateLevelLists();
+        levelSelected = SaveAndLoad.instance.levelSelected;
 
 
+
+
+    }
+    private void Update()
+    {
+        OnMouseDown();
+    }
+
+    private void UpdateLevelLists()
+    {
         cubes.Clear();
         cubeSides.Clear();
         cubeSidesGO.Clear();
+        //OnMouseDown();
+
         foreach (Transform child in cubeContainer.transform)
         {
             Cube cube = child.GetComponent<Cube>();
             cubes.Add(cube);
             cubesGO.Add(child.gameObject);
         }
-        OnMouseDown();
 
         foreach (Cube cube in cubes)
         {
@@ -133,70 +147,68 @@ public class LevelEditor : MonoBehaviour
         }
         cubeSides.TrimExcess();
         cubes.TrimExcess();
-        levelSelected = SaveAndLoad.instance.levelSelected;
-
-
-
-
     }
 
     public void OnMouseDown()
     {
-        if (!prefabPicked && !prefabTransform && !prefabRotate)
+       if (Input.GetMouseButton(0))
         {
-
-        }
-        else if (prefabPicked)
-        {
-            if (prefab == null)
+            if (!prefabPicked && !prefabTransform && !prefabRotate)
             {
-                Debug.Log("Warning, no prefab");
-                return;
+
             }
-
-            if (Input.GetMouseButtonDown(0))
+            else if (prefabPicked)
             {
-                GameObject newCube = Instantiate(prefab);
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit))
+                if (prefab == null)
                 {
-                    Vector3 rounded;
-                    rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
-                    rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
-                    rounded.z = 0;
-                    newCube.transform.position = rounded;
-                    newCube.transform.parent = cubeContainer.transform;
-
-                    cubes.Add(newCube.GetComponent<Cube>());
-                    CheckAvaibleColors();
-                    /*foreach (Transform child in newCube.transform)
-                    {
-                        cubeSides.Add(child.GetComponent<CubeSide>());
-                    }*/
-                    prefabPicked = false;
-
+                    Debug.Log("Warning, no prefab");
+                    return;
                 }
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    GameObject newCube = Instantiate(prefab);
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        Vector3 rounded;
+                        rounded.x = Mathf.RoundToInt((hit.point.x * gridSize) / gridSize);
+                        rounded.y = Mathf.RoundToInt((hit.point.y * gridSize) / gridSize);
+                        rounded.z = 0;
+                        newCube.transform.position = rounded;
+                        newCube.transform.parent = cubeContainer.transform;
+
+                        cubes.Add(newCube.GetComponent<Cube>());
+                        CheckAvaibleColors();
+
+                        prefabPicked = false;
+
+                    }
+                }
+
             }
 
+            if (prefabTransform) //Pushed the button to transform, ready to pick a cube
+            {
+                TransformCubeLogic();
+            }
+            if (prefabRotate)
+            {
+                RotateCubeLogic();
+            }
+            if (prefabErase)
+            {
+                EraseCubeLogic();
+            }
+            if (makeFixedNumbers)
+            {
+                MakeFixedNumbersLogic();
+            }
+            UpdateLevel();
+
         }
 
-        if (prefabTransform) //Pushed the button to transform, ready to pick a cube
-        {
-            TransformCubeLogic();
-        }
-        if (prefabRotate)
-        {
-            RotateCubeLogic();
-        }
-        if (prefabErase)
-        {
-            EraseCubeLogic();
-        }
-        if (makeFixedNumbers)
-        {
-            MakeFixedNumbersLogic();
-        }
     }
 
     private void CheckAvaibleColors()
@@ -279,44 +291,6 @@ public class LevelEditor : MonoBehaviour
         }
         
     }
-
-    public void LoadData(int levelSelection)
-    {
-        int currentLevel = levelSelection;
-        /*if (ES3.KeyExists("MaxLevelsCreated"))
-        {
-            currentLevel = ES3.Load<int>("MaxLevelsCreated");
-        }
-        else
-        {
-            ES3.Save<int>("MaxLevelsCreated", currentLevel = 0);
-        }*/
-
-        int nCubes = ES3.Load<int>("NumberCubesLevel" + currentLevel);
-
-        for (int i = 0; i < nCubes; i++)
-        {
-            int prefabNum = ES3.Load<int>("Cube" + i + "Level" + currentLevel + "Prefab");
-            PickPrefabToPlace(prefabNum);
-            prefabPicked = false;
-
-            GameObject newCubeGO = Instantiate(prefab, cubeContainer.transform);
-            ES3.LoadInto<Cube>("Cube" + i + "Level" + currentLevel, newCubeGO.GetComponent<Cube>()); //we load the data onto a new cube component
-            newCubeGO.transform.position = newCubeGO.GetComponent<Cube>().position;
-
-            for (int j = 0; j < 6; j++)
-            {
-
-                ES3.LoadInto<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, newCubeGO.transform.GetChild(j).gameObject.GetComponent<CubeSide>());
-            }
-
-
-        }
-
-    }
-
-
-
 
     private void MakeFixedNumbersLogic()
     {

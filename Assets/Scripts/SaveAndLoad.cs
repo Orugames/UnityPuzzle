@@ -88,8 +88,9 @@ public class SaveAndLoad : MonoBehaviour
 
             for (int j = 0; j < 6; j++)
             {
-
-                ES3.LoadInto<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, newCubeGO.transform.GetChild(j).gameObject.GetComponent<CubeSide>());
+                CubeSide newCubeSide = newCubeGO.transform.GetChild(j).gameObject.GetComponent<CubeSide>();
+                ES3.LoadInto<CubeSide>("CubeSide" + j + "Cube" + i + "Level" + currentLevel, newCubeSide);
+                newCubeSide.numberText.transform.Rotate(newCubeSide.transform.forward, -90 * (newCubeGO.transform.eulerAngles.z / 90));
             }
 
 

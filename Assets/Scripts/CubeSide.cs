@@ -35,29 +35,24 @@ public class CubeSide : MonoBehaviour
     void Start()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
-        //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
         MarkerGORenderer.material.color = cubeSideColor;
         MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
+        UpdateSide();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    
     public void UpdateSide()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         cubeSideColor = cubeParent.color;
-        //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
-
         MarkerGORenderer.material.color = cubeSideColor;
         numberText.color = Color.white;
         posText.color = Color.black;
         position = transform.position;
         MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
 
-        if (oposedSide != null) {
+        if (oposedSide != null)
+        {
             oposedNumber = oposedSide.number;
             oposedSideGO = oposedSide.gameObject;
         }
@@ -69,32 +64,19 @@ public class CubeSide : MonoBehaviour
         posText.text = x.ToString() + "," + y.ToString();
         posText.name = x.ToString() + "," + y.ToString();
         name = "Cubeside " + posText.text;
-        //If the number is not between 1 and 6
-        if (number > 6 || number <= 0)
-        {
-            number = 0;
-            numberText.text = "";
-            //numberText.text = posText.text;
-        }
+        LimitNumberCount();
+
         //Logic if the number is fixed
-        if (fixedNumber)
-        {
-            //we keep the value but still hide the rest
-            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.white * 0.5f;
-            numberText.color = Color.black;
-
-        }
+        FixedSideLogic();
         //Logic if the numbers must be hidden
-        numberText.renderer.enabled = true;
-        numberText.alpha = 255;
+        HideNumbersLogic();
 
-        if (hideNumbers && !fixedNumber)
-        {
-            numberText.renderer.enabled = false;
-            numberText.alpha = 0;
-        }
-        
         //Logic if the side is combination of two cubes
+        CombinedSideLogic();
+    }
+
+    private void CombinedSideLogic()
+    {
         if (combinedCube)
         {
             cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
@@ -106,21 +88,49 @@ public class CubeSide : MonoBehaviour
         }
     }
 
+    private void HideNumbersLogic()
+    {
+        numberText.renderer.enabled = true;
+        numberText.alpha = 255;
+
+        if (hideNumbers && !fixedNumber)
+        {
+            numberText.renderer.enabled = false;
+            numberText.alpha = 0;
+        }
+    }
+
+    private void FixedSideLogic()
+    {
+        if (fixedNumber)
+        {
+            //we keep the value but still hide the rest
+            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.white * 0.5f;
+            numberText.color = Color.black;
+
+        }
+    }
+
+    private void LimitNumberCount()
+    {
+        //If the number is not between 1 and 6
+        if (number > 6 || number <= 0)
+        {
+            number = 0;
+            numberText.text = "";
+            //numberText.text = posText.text;
+        }
+    }
+
     void UpdateMarker()
     {
         if (cubeParent != null)
             if (!cubeParent.cubeCompleted)
             {
-                //MarkerGORenderer.material.color = Color.black + Color.white * 0.8f;
-                //numberText.color = Color.black;
-                //posText.color = Color.black;
 }
             else
             {
-                //MarkerGORenderer.material.color = (Color.white + Color.green) * 0.7f;
                 posText.color = Color.green;
-                //numberText.color = Color.green/2;
-                //posText.color = Color.green/2;
             }
         
     }
@@ -136,14 +146,15 @@ public class CubeSide : MonoBehaviour
                 if (hit.collider.gameObject == this.gameObject)
                 {
                     number += 1;
-                    numberText.text = number.ToString();
-                    if (number > 6)
+                    UpdateSide();
+                    //numberText.text = number.ToString();
+                    /*if (number > 6)
                     {
                         number = 0;
                         numberText.text = "";
                         numberText.text = posText.text;
                     }
-                    oposedNumber = oposedSide.number;
+                    oposedNumber = oposedSide.number;*/
                 }
             }
         }

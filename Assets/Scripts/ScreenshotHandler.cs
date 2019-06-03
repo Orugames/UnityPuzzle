@@ -30,7 +30,7 @@ public class ScreenshotHandler : MonoBehaviour
             renderResult.ReadPixels(rect, 0, 0);
             ES3.SaveImage(renderResult, "CameraScreenshotLevel" + currentLevel + ".png");
             byte[] byteArray = renderResult.EncodeToPNG();
-            System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot" + currentLevel + ".png", byteArray);
+            //System.IO.File.WriteAllBytes(Application.dataPath + "/CameraScreenshot" + currentLevel + ".png", byteArray);
 
             RenderTexture.ReleaseTemporary(renderTexture);
             myCamera.targetTexture = null;

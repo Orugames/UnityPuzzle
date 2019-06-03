@@ -18,13 +18,8 @@ public class Cube : MonoBehaviour
 
     public void Start()
     {
+        InitColor();
 
-        if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideColor) //here we init the color
-        {
-            color = new Color();
-
-            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
-        }
         foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());
@@ -34,20 +29,20 @@ public class Cube : MonoBehaviour
         }
         name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
 
-        PrefabNameLogic();
     }
 
-    void PrefabNameLogic()
+    private void InitColor()
     {
-        /*var cubePrefab = Resources.Load<GameObject>("Prefabs/CubeTypes/Cube1");
-        switch ()*/
+        if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideColor) //here we init the color
+        {
+            color = new Color();
+
+            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  
+
     public void UpdateCube()
     {
         position = transform.position;
@@ -65,15 +60,13 @@ public class Cube : MonoBehaviour
             cubeSide.UpdateSide();
             cubeSidesNumbers.Add(cubeSide.number);
 
-        }
-       
-
+        }      
         cubeSidesNumbers.Sort();
 
-        Debug.Log(String.Join("",
+        /*Debug.Log(String.Join("",
              new List<int>(cubeSidesNumbers)
              .ConvertAll(i => i.ToString())
-             .ToArray()));
+             .ToArray()));*/
 
         cubeCompleted = CheckCompletion();
 
