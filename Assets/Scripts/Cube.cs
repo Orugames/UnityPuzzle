@@ -18,10 +18,6 @@ public class Cube : MonoBehaviour
 
     public void Start()
     {
-        /*color = new Color(
-            UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f),
-            UnityEngine.Random.Range(0f, 1f));*/
 
         if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideColor) //here we init the color
         {
