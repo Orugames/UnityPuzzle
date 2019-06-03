@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ES3Types
 {
-	[ES3PropertiesAttribute("color", "position")]
+	[ES3PropertiesAttribute("color", "position", "rotation")]
 	public class ES3Type_Cube : ES3ComponentType
 	{
 		public static ES3Type Instance = null;
@@ -19,6 +19,7 @@ namespace ES3Types
 			
 			writer.WriteProperty("color", instance.color, ES3Type_Color.Instance);
 			writer.WriteProperty("position", instance.position, ES3Type_Vector2.Instance);
+			writer.WriteProperty("rotation", instance.rotation, ES3Type_Quaternion.Instance);
 		}
 
 		protected override void ReadComponent<T>(ES3Reader reader, object obj)
@@ -34,6 +35,9 @@ namespace ES3Types
 						break;
 					case "position":
 						instance.position = reader.Read<UnityEngine.Vector2>(ES3Type_Vector2.Instance);
+						break;
+					case "rotation":
+						instance.rotation = reader.Read<UnityEngine.Quaternion>(ES3Type_Quaternion.Instance);
 						break;
 					default:
 						reader.Skip();

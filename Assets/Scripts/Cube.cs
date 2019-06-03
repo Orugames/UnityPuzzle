@@ -7,6 +7,7 @@ public class Cube : MonoBehaviour
 {
     public Color color;
     public Vector2 position;
+    public Quaternion rotation;
     public bool cubeCompleted;
     public GameObject prefab;
     public int prefabNum;
@@ -22,9 +23,12 @@ public class Cube : MonoBehaviour
             UnityEngine.Random.Range(0f, 1f),
             UnityEngine.Random.Range(0f, 1f));*/
 
-        color = new Color();
+        if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideColor) //here we init the color
+        {
+            color = new Color();
 
-        color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
+            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
+        }
         foreach (Transform child in transform)
         {
             cubeSides.Add(child.GetComponent<CubeSide>());
@@ -51,6 +55,7 @@ public class Cube : MonoBehaviour
     public void UpdateCube()
     {
         position = transform.position;
+        rotation = transform.rotation;
         cubeSidesNumbers.Clear();
         cubeSides.Clear();
         foreach (Transform child in transform)

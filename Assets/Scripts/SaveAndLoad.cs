@@ -84,6 +84,7 @@ public class SaveAndLoad : MonoBehaviour
             GameObject newCubeGO = Instantiate(prefab, cubeContainer.transform);
             ES3.LoadInto<Cube>("Cube" + i + "Level" + currentLevel, newCubeGO.GetComponent<Cube>()); //we load the data onto a new cube component
             newCubeGO.transform.position = newCubeGO.GetComponent<Cube>().position;
+            newCubeGO.transform.rotation = newCubeGO.GetComponent<Cube>().rotation;
 
             for (int j = 0; j < 6; j++)
             {
