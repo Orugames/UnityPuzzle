@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum markers { top, left, right, down }
+
 public class Cube : MonoBehaviour
 {
     public Color color;
@@ -14,7 +16,7 @@ public class Cube : MonoBehaviour
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
     public List<Color> presetColors = new List<Color> { Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
-
+    public markers chosenMarker = markers.top;
 
     public void Start()
     {
@@ -28,6 +30,7 @@ public class Cube : MonoBehaviour
             child.GetComponent<CubeSide>().cubeSideColor = color;
         }
         name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
+        RandomChosenMarker();
 
     }
 
@@ -58,6 +61,8 @@ public class Cube : MonoBehaviour
         foreach (CubeSide cubeSide in cubeSides)
         {
             cubeSide.UpdateSide();
+            cubeSide.MarkerColorsLogic(chosenMarker);
+
             cubeSidesNumbers.Add(cubeSide.number);
 
         }      
@@ -72,7 +77,26 @@ public class Cube : MonoBehaviour
 
     }
 
+    private void RandomChosenMarker()
+    {
+        int randMarkerInt = UnityEngine.Random.Range(1, 5);
+        switch (randMarkerInt)
+        {
+            case 1:
+                chosenMarker = markers.top;
+                break;
+            case 2:
+                chosenMarker = markers.left;
+                break;
+            case 3:
+                chosenMarker = markers.right;
+                break;
+            case 4:
+                chosenMarker = markers.down;
+                break;
 
+        }
+    }
     public bool CheckCompletion()
     {
         foreach (CubeSide side in cubeSides)

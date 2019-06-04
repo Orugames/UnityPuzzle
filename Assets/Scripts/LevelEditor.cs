@@ -50,6 +50,7 @@ public class LevelEditor : MonoBehaviour
     public bool prefabRotate;
     public bool prefabReadyToRotate;
     public bool prefabErase;
+    public bool prefabNextMarkers;
     public bool makeFixedNumbers;
     public bool initBool;
     public int levelSelected;

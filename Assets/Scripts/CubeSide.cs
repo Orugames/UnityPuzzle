@@ -14,18 +14,23 @@ public class CubeSide : MonoBehaviour
     public GameObject oposedSideGO;
     public CubeSide similarCubeSide;
     public CubeSide oposedSide;
-    public GameObject MarkerGO;
     public Renderer MarkerGORenderer;
     public TextMeshPro numberText;
     public TextMeshPro posText;
     public Vector2 position;
     public Color cubeSideColor;
+    public GameObject MarkerTop;
+    public GameObject MarkerLeft;
+    public GameObject MarkerRight;
+    public GameObject MarkerDown;
     public bool fixedNumber;
     public bool modifyValues;
     public bool combinedCube;
     public bool hideNumbers;
+    public Material tileMat;
 
-
+    //public enum markers { top, left, right, down }
+    //public markers chosenMarker = markers.top;
 
     private void Reset()
     {
@@ -35,21 +40,19 @@ public class CubeSide : MonoBehaviour
     void Start()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
-        MarkerGORenderer.material.color = cubeSideColor;
-        MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
         UpdateSide();
     }
 
-    
+ 
+
     public void UpdateSide()
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         cubeSideColor = cubeParent.color;
-        MarkerGORenderer.material.color = cubeSideColor;
+        //MarkerGORenderer.material.color = cubeSideColor;
         numberText.color = Color.white;
         posText.color = Color.black;
         position = transform.position;
-        MarkerGORenderer = MarkerGO.GetComponent<Renderer>();
 
         if (oposedSide != null)
         {
@@ -66,6 +69,7 @@ public class CubeSide : MonoBehaviour
         name = "Cubeside " + posText.text;
         LimitNumberCount();
 
+
         //Logic if the number is fixed
         FixedSideLogic();
         //Logic if the numbers must be hidden
@@ -73,16 +77,37 @@ public class CubeSide : MonoBehaviour
 
         //Logic if the side is combination of two cubes
         CombinedSideLogic();
+        MarkerTop.GetComponent<Renderer>().material = tileMat;
+    }
+
+    public  void MarkerColorsLogic(markers markerSent)
+    {
+        switch (markerSent)
+        {
+            case markers.top:
+                MarkerTop.GetComponent<Renderer>().material.color = cubeSideColor;
+                break;
+            case markers.left:
+                MarkerLeft.GetComponent<Renderer>().material.color = cubeSideColor;
+                break;
+            case markers.right:
+                MarkerRight.GetComponent<Renderer>().material.color = cubeSideColor;
+                break;
+            case markers.down:
+                MarkerDown.GetComponent<Renderer>().material.color = cubeSideColor;
+                break;
+
+        }
     }
 
     private void CombinedSideLogic()
     {
         if (combinedCube)
         {
-            cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
+            //cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
             //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
-            MarkerGORenderer.material.color = cubeSideColor;
-            similarCubeSide.number = number;
+            //MarkerGORenderer.material.color = cubeSideColor;
+            //similarCubeSide.number = number;
 
 
         }
