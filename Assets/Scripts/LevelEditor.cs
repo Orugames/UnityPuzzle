@@ -202,6 +202,10 @@ public class LevelEditor : MonoBehaviour
             {
                 EraseCubeLogic();
             }
+            if (prefabNextMarkers)
+            {
+                NextNarkersLogic();
+            }
             if (makeFixedNumbers)
             {
                 MakeFixedNumbersLogic();
@@ -493,7 +497,42 @@ public class LevelEditor : MonoBehaviour
 
         }
     }
+    
+    public void NextNarkersLogic()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+           
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.name is "LevelEditor")
+                {
+                    return;
+                }
+                cubeSelected = hit.collider.gameObject.transform.parent.gameObject; //we select the cube parent of this side
+                markers markerOfCube = cubeSelected.GetComponent<Cube>().chosenMarker;
 
+                switch (markerOfCube)
+                {
+                    case markers.top:
+                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.right;
+                        break;
+                    case markers.right:
+                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.left;
+                        break;
+                    case markers.left:
+                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.down;
+                        break;
+                    case markers.down:
+                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.top;
+                        break;
+                }
+                
+            }
+        }
+    }
     public void PickPrefabToPlace(int selection)
     {
         switch (selection)
@@ -577,6 +616,11 @@ public class LevelEditor : MonoBehaviour
     public void MakeFixedNumbers()
     {
         makeFixedNumbers = !makeFixedNumbers;
+    }
+    public void NextMarker()
+    {
+        prefabNextMarkers = !prefabNextMarkers;
+       
     }
 
 

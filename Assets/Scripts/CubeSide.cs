@@ -28,6 +28,7 @@ public class CubeSide : MonoBehaviour
     public bool combinedCube;
     public bool hideNumbers;
     public Material tileMat;
+    Color originalColor = new Color(154f/255f,154f/255f,154f/255f);
 
     //public enum markers { top, left, right, down }
     //public markers chosenMarker = markers.top;
@@ -82,6 +83,10 @@ public class CubeSide : MonoBehaviour
 
     public  void MarkerColorsLogic(markers markerSent)
     {
+        MarkerTop.GetComponent<Renderer>().material.color = originalColor;
+        MarkerLeft.GetComponent<Renderer>().material.color = originalColor;
+        MarkerRight.GetComponent<Renderer>().material.color = originalColor;
+        MarkerDown.GetComponent<Renderer>().material.color = originalColor;
         switch (markerSent)
         {
             case markers.top:
