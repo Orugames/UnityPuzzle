@@ -181,7 +181,7 @@ public class LevelEditor : MonoBehaviour
                         newCube.transform.parent = cubeContainer.transform;
 
                         cubes.Add(newCube.GetComponent<Cube>());
-                        CheckAvaibleColors();
+                        //CheckAvaibleColors();
 
                         prefabPicked = false;
 
@@ -434,8 +434,8 @@ public class LevelEditor : MonoBehaviour
                     cubeSides[i].cubeParents.Add(cubeSides[k].transform.parent.GetComponent<Cube>());
                     cubeSides[k].cubeParents.Add(cubeSides[i].transform.parent.GetComponent<Cube>());
                     cubeSides[k].cubeParents.Add(cubeSides[k].transform.parent.GetComponent<Cube>());
-                    cubeSides[i].similarCubeSide = cubeSides[k];
-                    cubeSides[k].similarCubeSide = cubeSides[i];
+                    cubeSides[i].similarCubeSides.Add(cubeSides[k]);
+                    cubeSides[k].similarCubeSides.Add(cubeSides[i]);
 
                     cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
                     cubeSides[k].GetComponent<BoxCollider>().enabled = false;
@@ -457,15 +457,15 @@ public class LevelEditor : MonoBehaviour
 
                 if (cubeSides[i].combinedCube && cubeSides[k].combinedCube)
                 {
-                    if (cubeSides[i].similarCubeSide == cubeSides[k] && cubeSides[k].similarCubeSide == cubeSides[i] && distance > 0.1f) //If each of them share the oposed side logic
+                    if (cubeSides[i].similarCubeSides.Contains(cubeSides[k]) && cubeSides[k].similarCubeSides.Contains(cubeSides[i]) && distance > 0.1f) //If each of them share the oposed side logic
                     {
                         cubeSides[i].combinedCube = false;
                         cubeSides[k].combinedCube = false;
                         cubeSides[i].cubeParents.Clear();
                         cubeSides[k].cubeParents.Clear();
 
-                        cubeSides[i].similarCubeSide = null;
-                        cubeSides[k].similarCubeSide = null;
+                        cubeSides[i].similarCubeSides.Remove(cubeSides[k]);
+                        cubeSides[k].similarCubeSides.Remove(cubeSides[i]);
 
                         cubeSides[i].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
                         cubeSides[i].GetComponent<BoxCollider>().enabled = true;
@@ -520,12 +520,12 @@ public class LevelEditor : MonoBehaviour
                         cubeSelected.GetComponent<Cube>().chosenMarker = markers.right;
                         break;
                     case markers.right:
-                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.left;
-                        break;
-                    case markers.left:
                         cubeSelected.GetComponent<Cube>().chosenMarker = markers.down;
                         break;
                     case markers.down:
+                        cubeSelected.GetComponent<Cube>().chosenMarker = markers.left;
+                        break;
+                    case markers.left:
                         cubeSelected.GetComponent<Cube>().chosenMarker = markers.top;
                         break;
                 }

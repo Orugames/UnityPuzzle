@@ -27,7 +27,7 @@ public class Cube : MonoBehaviour
             cubeSides.Add(child.GetComponent<CubeSide>());
 
 
-            child.GetComponent<CubeSide>().cubeSideColor = color;
+            child.GetComponent<CubeSide>().cubeSideOwnColor = color;
         }
         name = "Cube " + transform.position.x.ToString() + " , " + transform.position.y.ToString();
         RandomChosenMarker();
@@ -36,7 +36,7 @@ public class Cube : MonoBehaviour
 
     private void InitColor()
     {
-        if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideColor) //here we init the color
+        if (color == transform.GetChild(0).GetComponent<CubeSide>().cubeSideOwnColor) //here we init the color
         {
             color = new Color();
 
@@ -56,7 +56,7 @@ public class Cube : MonoBehaviour
         {
             cubeSides.Add(child.GetComponent<CubeSide>());            
 
-            child.GetComponent<CubeSide>().cubeSideColor = color;
+            child.GetComponent<CubeSide>().cubeSideOwnColor = color;
         }
         foreach (CubeSide cubeSide in cubeSides)
         {

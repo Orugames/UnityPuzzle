@@ -31,7 +31,7 @@ public class CombinedSide : CubeSide
         similarSide = simSide;
         oposedSide = i_oposedSide;
         cubeParent = parent;
-        cubeSideColor = (parent1C + parent2C)/ 2f;
+        cubeSideOwnColor = (parent1C + parent2C)/ 2f;
         //transform.SetParent(parent.transform);
         UpdateSide();
     }
