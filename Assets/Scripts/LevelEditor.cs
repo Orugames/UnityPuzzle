@@ -440,7 +440,6 @@ public class LevelEditor : MonoBehaviour
                     cubeSides[i].similarCubeSides.Add(cubeSides[k]);
                     cubeSides[k].similarCubeSides.Add(cubeSides[i]);
 
-                    cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
                     cubeSides[k].GetComponent<BoxCollider>().enabled = false;
 
                     cubeSides[i].UpdateSide();

@@ -110,7 +110,7 @@ public class CubeSide : MonoBehaviour
     }
     public void MarkerColorsLogicCombined(markers markerSent, Color cubeParentColor)
     {
- 
+
         switch (markerSent)
         {
             case markers.top:
