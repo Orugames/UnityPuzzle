@@ -14,21 +14,21 @@ public class CubeSide : MonoBehaviour
     public GameObject oposedSideGO;
     public List<CubeSide> similarCubeSides = new List<CubeSide>();
     public CubeSide oposedSide;
-    public Renderer MarkerGORenderer;
     public TextMeshPro numberText;
     public TextMeshPro posText;
     public Vector2 position;
     public Color cubeSideOwnColor;
-    public GameObject MarkerTop;
-    public GameObject MarkerLeft;
-    public GameObject MarkerRight;
-    public GameObject MarkerDown;
+    public GameObject markerTop;
+    public GameObject markerLeft;
+    public GameObject markerRight;
+    public GameObject markerDown;
+    public GameObject correctCubeDot;
     public bool fixedNumber;
     public bool modifyValues;
     public bool combinedCube;
     public bool hideNumbers;
     public Material tileMat;
-    Color originalColor = new Color(154f/255f,154f/255f,154f/255f);
+    Color originalColor = new Color(212f/255f,212f/255f,212f/255f);
 
     //public enum markers { top, left, right, down }
     //public markers chosenMarker = markers.top;
@@ -42,6 +42,7 @@ public class CubeSide : MonoBehaviour
     {
         cubeParent = transform.parent.GetComponent<Cube>();
         UpdateSide();
+        markerTop.GetComponent<SpriteRenderer>().color = originalColor;
     }
 
  
@@ -69,7 +70,7 @@ public class CubeSide : MonoBehaviour
         name = "Cubeside " + posText.text;
         LimitNumberCount();
 
-
+        if (!combinedCube) MarkerColorsLogic(cubeParent.chosenMarker);
         //Logic if the number is fixed
         FixedSideLogic();
         //Logic if the numbers must be hidden
@@ -77,47 +78,52 @@ public class CubeSide : MonoBehaviour
 
         //Logic if the side is combination of two cubes
         CombinedSideLogic();
-        MarkerTop.GetComponent<Renderer>().material = tileMat;
     }
 
     public  void MarkerColorsLogic(markers markerSent)
     {
-        MarkerTop.GetComponent<SpriteRenderer>().color = originalColor;
-        MarkerLeft.GetComponent<SpriteRenderer>().color = originalColor;
-        MarkerRight.GetComponent<SpriteRenderer>().color = originalColor;
-        MarkerDown.GetComponent<SpriteRenderer>().color = originalColor;
+        markerTop.GetComponent<SpriteRenderer>().color = originalColor;
+        markerLeft.GetComponent<SpriteRenderer>().color = originalColor;
+        markerRight.GetComponent<SpriteRenderer>().color = originalColor;
+        markerDown.GetComponent<SpriteRenderer>().color = originalColor;
         switch (markerSent)
         {
             case markers.top:
-                MarkerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                markerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+
                 break;
             case markers.left:
-                MarkerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                markerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+
                 break;
             case markers.right:
-                MarkerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                markerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+
                 break;
             case markers.down:
-                MarkerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                markerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+
                 break;
 
         }
+
     }
     public void MarkerColorsLogicCombined(markers markerSent, Color cubeParentColor)
     {
+ 
         switch (markerSent)
         {
             case markers.top:
-                MarkerTop.GetComponent<SpriteRenderer>().color = cubeParentColor;
+                markerTop.GetComponent<SpriteRenderer>().color = cubeParentColor;
                 break;
             case markers.left:
-                MarkerLeft.GetComponent<SpriteRenderer>().color = cubeParentColor;
+                markerLeft.GetComponent<SpriteRenderer>().color = cubeParentColor;
                 break;
             case markers.right:
-                MarkerRight.GetComponent<SpriteRenderer>().color = cubeParentColor;
+                markerRight.GetComponent<SpriteRenderer>().color = cubeParentColor;
                 break;
             case markers.down:
-                MarkerDown.GetComponent<SpriteRenderer>().color = cubeParentColor;
+                markerDown.GetComponent<SpriteRenderer>().color = cubeParentColor;
                 break;
 
         }
@@ -127,10 +133,7 @@ public class CubeSide : MonoBehaviour
     {
         if (combinedCube)
         {
-            //cubeSideColor = (cubeParents[0].color + cubeParents[1].color) / 2;
-            //transform.GetChild(0).GetComponent<Renderer>().material.color = cubeSideColor;
-            //MarkerGORenderer.material.color = cubeSideColor;
-            //similarCubeSide.number = number;
+
             foreach(Cube cube in cubeParents)
             {
                 MarkerColorsLogicCombined(cube.chosenMarker,cube.color);
@@ -183,10 +186,11 @@ public class CubeSide : MonoBehaviour
         if (cubeParent != null)
             if (!cubeParent.cubeCompleted)
             {
-}
+                correctCubeDot.SetActive(false);
+            }
             else
             {
-                posText.color = Color.green;
+                correctCubeDot.SetActive(true);
             }
         
     }

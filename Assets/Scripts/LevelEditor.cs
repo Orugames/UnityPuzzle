@@ -37,6 +37,7 @@ public class LevelEditor : MonoBehaviour
     public GameObject cube18;
     public GameObject cube19;
     public GameObject cube20;
+    
     public TextMeshProUGUI levelText;
     GameObject cubeSelected;
     public List<Cube> cubes = new List<Cube>();
@@ -420,13 +421,15 @@ public class LevelEditor : MonoBehaviour
         {
             for (var k = i + 1; k < cubeSides.Count; k++)
             {
+
                 var distance = Vector3.Distance(cubeSides[i].transform.position, cubeSides[k].transform.position);
 
-                if (distance < 0.1f && !cubeSides[i].combinedCube && !cubeSides[k].combinedCube)
+                if (distance < 0.1f)
                 {
                     Debug.Log("Found duplicate, change to two combined ones");
                     Debug.Log(cubeSides[i].name);
                     Debug.Log(cubeSides[k].name);
+
 
                     cubeSides[i].combinedCube = true;
                     cubeSides[k].combinedCube = true;
@@ -439,6 +442,9 @@ public class LevelEditor : MonoBehaviour
 
                     cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
                     cubeSides[k].GetComponent<BoxCollider>().enabled = false;
+
+                    cubeSides[i].UpdateSide();
+                    cubeSides[k].UpdateSide();
 
 
 
@@ -455,24 +461,23 @@ public class LevelEditor : MonoBehaviour
             {
                 var distance = Vector3.Distance(cubeSides[i].transform.position, cubeSides[k].transform.position);
 
-                if (cubeSides[i].combinedCube && cubeSides[k].combinedCube)
+              
+                if (cubeSides[i].similarCubeSides.Contains(cubeSides[k]) && cubeSides[k].similarCubeSides.Contains(cubeSides[i]) && distance > 0.1f) //If each of them share the oposed side logic
                 {
-                    if (cubeSides[i].similarCubeSides.Contains(cubeSides[k]) && cubeSides[k].similarCubeSides.Contains(cubeSides[i]) && distance > 0.1f) //If each of them share the oposed side logic
-                    {
-                        cubeSides[i].combinedCube = false;
-                        cubeSides[k].combinedCube = false;
-                        cubeSides[i].cubeParents.Clear();
-                        cubeSides[k].cubeParents.Clear();
+                    cubeSides[i].combinedCube = false;
+                    cubeSides[k].combinedCube = false;
+                    cubeSides[i].cubeParents.Clear();
+                    cubeSides[k].cubeParents.Clear();
 
-                        cubeSides[i].similarCubeSides.Remove(cubeSides[k]);
-                        cubeSides[k].similarCubeSides.Remove(cubeSides[i]);
+                    cubeSides[i].similarCubeSides.Remove(cubeSides[k]);
+                    cubeSides[k].similarCubeSides.Remove(cubeSides[i]);
 
-                        cubeSides[i].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
-                        cubeSides[i].GetComponent<BoxCollider>().enabled = true;
-                        cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
-                        cubeSides[k].GetComponent<BoxCollider>().enabled = true;
-                    }
+                    cubeSides[i].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+                    cubeSides[i].GetComponent<BoxCollider>().enabled = true;
+                    cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+                    cubeSides[k].GetComponent<BoxCollider>().enabled = true;
                 }
+                
                
                 
             }
