@@ -5,10 +5,15 @@ using UnityEngine;
 public class LevelSolver : MonoBehaviour
 {
     public LevelEditor levelEditor;
-    public List<int> numbersPossible = new List<int>() { 0, 0, 0 };
-    public Stack<int> stack1 = new Stack<int>();
-    public Stack<int> stack2 = new Stack<int>();
-    public Stack<int> stack3 = new Stack<int>();
+    public List<string> solutions = new List<string>();
+
+    public Queue<int> cube1Stack1 = new Queue<int>();
+    public Queue<int> cube1Stack2 = new Queue<int>();
+    public Queue<int> cube1Stack3 = new Queue<int>();
+
+    public Queue<int> cube2Stack1 = new Queue<int>();
+    public Queue<int> cube2Stack2 = new Queue<int>();
+    public Queue<int> cube2Stack3 = new Queue<int>();
 
     public Cube cube1;
     public Cube cube2;
@@ -23,140 +28,206 @@ public class LevelSolver : MonoBehaviour
     public int input2;
     public int input3;
 
+    public int index = 1;
+
     public void StartSolution()
     {
         start = false;
         input1 = 0;
         input2 = 0;
         input3 = 0;
-        StartCoroutine(SearchRoutine());
     }
     public void Update()
     {
         if (levelEditor.cubes.Count > 1)
         {
-            cube1 = levelEditor.cubes[0];
-            cube2 = levelEditor.cubes[1];
+            cubes = levelEditor.cubes;
         }
         if (start)
         {
             StartSolution();
         }
     }
-    public IEnumerator SearchRoutine(float timeStep = 0.1f)
+    public void FillPossibleSolutionsRaw()
     {
         Debug.Log("Entering Coroutine");
-
-        cube2.side1Solver.number = 1;
-        cube2.side1Solver.oposedSide.number = 7 - 1;
-        cube2.side2Solver.number = 2;
-        cube2.side2Solver.oposedSide.number = 7 - 3;
-        cube2.side3Solver.number = 3;
-        cube2.side3Solver.oposedSide.number = 7 - 3;
-
-        for (int x = 0; x < 2; x++)
-        {
-            if (x == 0) //turn for the other cube to solve
-            {
-                FillCube(cubes[0], 0);
-            }
+       
             for (int i = 1; i < 7; i++)
             {
-                stack1.Push(i);
+                cube1Stack1.Enqueue(i);
+                //cube2Stack1.Enqueue(i);
                 input1 = i;
-                cube1.side1Solver.number = i;
-                cube1.side1Solver.oposedSide.number = 7 - i;
+
                 for (int j = 1; j < 7; j++)
                 {
                     bool input2Validity = checkIfInputValid(j, i);
 
                     if (input2Validity)
                     {
-                        stack2.Push(j);
+                        cube1Stack2.Enqueue(j);
+                        //cube2Stack2.Enqueue(j);
                         input2 = j;
-                        cube1.side2Solver.number = j;
-                        cube1.side2Solver.oposedSide.number = 7 - j;
+
                     }
                     for (int k = 1; k < 7; k++)
                     {
                         bool input3Validity = checkIfInputValid(k, i, j);
+
                         if (input3Validity)
                         {
-                            stack3.Push(k);
+                            cube1Stack3.Enqueue(k);
+                            //cube2Stack3.Enqueue(k);
                             input3 = k;
-                            cube1.side3Solver.number = k;
-                            cube1.side3Solver.oposedSide.number = 7 - k;
-                            Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3);
-                            //Introducir dat
-                            //comprobar si es correcto
-                            cube1.UpdateCube();
-                            cube2.UpdateCube();
-                            if (cube1.cubeCompleted && cube2.cubeCompleted)
-                            {
-                                Debug.Log("Posible Solucion, salvamos");
-                                yield break;
-                            }
 
+                            Debug.Log("Valid Combination1: " + input1 + "," + input2 + "," + input3);
+
+                        for (int a = 1; a < 7; a++)
+                        {
+                            cube2Stack1.Enqueue(a);
+                            input1 = a;
+
+                            for (int b = 0; b < 7; b++)
+                            {
+                                input2Validity = checkIfInputValid(b, a);
+
+                                if (input2Validity)
+                                {
+                                    cube2Stack2.Enqueue(j);
+                                    input2 = j;
+
+                                }
+                            }
                         }
+
                     }
-                    yield return new WaitForEndOfFrame();
+                    }
                 }
             }
-        }
+        
 
     }
 
 
-    public bool FillCube(Cube cube, int cubeIndex)
+
+    public void CheckSolution()
     {
-        for (int i = 1; i < 7; i++)
+
+
+        for (int x = 0; x < cubes.Count; x++)
         {
-            stack1.Push(i);
-            input1 = i;
-            cubes[cubeIndex].side1Solver.number = i;
-            cubes[cubeIndex].side1Solver.oposedSide.number = 7 - i;
-            for (int j = 1; j < 7; j++)
+            if (x == 0)
             {
-                bool input2Validity = checkIfInputValid(j, i);
+                for (int i = 1; i < cube1Stack1.Count; i++)
+                {
+                    int cube1Side1 = cube1Stack1.Dequeue();
 
-                if (input2Validity)
-                {
-                    stack2.Push(j);
-                    input2 = j;
-                    cubes[cubeIndex].side2Solver.number = j;
-                    cubes[cubeIndex].side2Solver.oposedSide.number = 7 - j;
-                }
-                for (int k = 1; k < 7; k++)
-                {
-                    bool input3Validity = checkIfInputValid(k, i, j);
-                    if (input3Validity)
+                    for (int j = 1; j < cube1Stack2.Count; j++)
                     {
-                        stack3.Push(k);
-                        input3 = k;
-                        cubes[cubeIndex].side3Solver.number = k;
-                        cubes[cubeIndex].side3Solver.oposedSide.number = 7 - k;
-                        Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3);
-                        //Introducir dat
-                        //comprobar si es correcto
-                        cube1.UpdateCube();
-                        cube2.UpdateCube();
-                        if (cubes[cubeIndex].cubeCompleted)
-                        {
-                            Debug.Log("Posible Solucion, salvamos");
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        int cube1Side2 = cube1Stack2.Dequeue();
 
+                        for (int k = 1; k < cube1Stack3.Count; k++)
+                        {
+                            int cube1Side3 = cube1Stack3.Dequeue();
+
+
+                            cubes[x].side1Solver.number = cube1Side1;
+                            cubes[x].side2Solver.number = cube1Side2;
+                            cubes[x].side3Solver.number = cube1Side3;
+
+
+                            cubes[x].side1Solver.oposedSide.number = 7 - cube1Side1;
+                            cubes[x].side2Solver.oposedSide.number = 7 - cube1Side2;
+                            cubes[x].side3Solver.oposedSide.number = 7 - cube1Side3;
+
+                        }
                     }
-                    return false;
                 }
             }
-        }
-        return false;
+            else
+            {
+                for (int i = 1; i < cube2Stack1.Count; i++)
+                {
+                    int cube2Side1 = cube2Stack1.Dequeue();
 
+                    for (int j = 1; j < cube2Stack2.Count; j++)
+                    {
+                        int cube2Side2 = cube2Stack2.Dequeue();
+
+                        for (int k = 1; k < cube2Stack3.Count; k++)
+                        {
+                            int cube2Side3 = cube2Stack3.Dequeue();
+
+                            cubes[x].side1Solver.number = cube2Side1;
+                            cubes[x].side2Solver.number = cube2Side2;
+                            cubes[x].side3Solver.number = cube2Side3;
+
+
+                            cubes[x].side1Solver.oposedSide.number = 7 - cube2Side1;
+                            cubes[x].side2Solver.oposedSide.number = 7 - cube2Side2;
+                            cubes[x].side3Solver.oposedSide.number = 7 - cube2Side3;
+
+                            cubes[0].UpdateCube();
+                            cubes[1].UpdateCube();
+
+
+                            
+
+
+                        }
+                    }
+                }
+            }
+            
+        }
+
+    }
+
+    public void StartTestSolution()
+    {
+        int cube1Side1 = cube1Stack1.Dequeue();
+        int cube1Side2 = cube1Stack2.Dequeue();
+        int cube1Side3 = cube1Stack3.Dequeue();
+
+        cubes[0].side1Solver.number = cube1Side1;
+        cubes[0].side2Solver.number = cube1Side2;
+        cubes[0].side3Solver.number = cube1Side3;
+
+        cubes[0].side1Solver.oposedSide.number = 7 - cube1Side1;
+        cubes[0].side2Solver.oposedSide.number = 7 - cube1Side2;
+        cubes[0].side3Solver.oposedSide.number = 7 - cube1Side3;
+
+        int cube2Side1 = cube2Stack1.Dequeue();
+        int cube2Side2 = cube2Stack2.Dequeue();
+        int cube2Side3 = cube2Stack3.Dequeue();
+
+        cubes[1].side1Solver.number = cube2Side1;
+        cubes[1].side2Solver.number = cube2Side2;
+        cubes[1].side3Solver.number = cube2Side3;
+
+        cubes[1].side1Solver.oposedSide.number = 7 - cube2Side1;
+        cubes[1].side2Solver.oposedSide.number = 7 - cube2Side2;
+        cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
+
+        bool levelValid = checkNumbersSolution();
+
+    }
+
+
+    public bool checkNumbersSolution()
+    {
+        int cube2Side3 = cube2Stack3.Dequeue();
+        cubes[1].side3Solver.number = cube2Side3;
+        cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
+
+        cubes[0].UpdateCube();
+        cubes[1].UpdateCube();
+
+        if (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion())
+        {
+            index++;
+            return checkNumbersSolution();
+        }
+        return true;
     }
 
     public bool checkIfInputValid(int inputToTest, int compared1, int compared2)
