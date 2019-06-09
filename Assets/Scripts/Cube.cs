@@ -18,6 +18,10 @@ public class Cube : MonoBehaviour
     public List<Color> presetColors = new List<Color> { Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
     public markers chosenMarker = markers.top;
 
+    public CubeSide side1Solver;
+    public CubeSide side2Solver;
+    public CubeSide side3Solver;
+
     public void Start()
     {
         InitColor();
