@@ -61,7 +61,7 @@ public class LevelSolver : MonoBehaviour
         {
             solutionInts.Add(0);
         }
-        StartCoroutine(CreateSolution());
+        CreateSolution();
     }
     public void Update()
     {
@@ -74,7 +74,161 @@ public class LevelSolver : MonoBehaviour
             StartSolution();
         }
     }
-    public IEnumerator CreateSolution()
+    public void CreateSolution()
+    {
+        Debug.Log("Entering Coroutine");
+        index = 1;
+
+
+
+        for (int a = 1; a < 7; a++)
+        {
+            solutionInts[0] = a;
+            input1 = a;
+
+            for (int b = 1; b < 7; b++)
+            {
+                bool input2Validity = checkIfInputValid(b, a);
+
+                if (input2Validity)
+                {
+                    solutionInts[1] = b;
+                    input2 = b;
+
+                    for (int c = 1; c < 7; c++)
+                    {
+                        bool input3Validity = checkIfInputValid(c, a, b);
+
+                        if (input3Validity)
+                        {
+                            solutionInts[2] = c;
+                            input3 = c;
+
+                            for (int d = 1; d < 7; d++)
+                            {
+                                solutionInts[3] = d;
+                                input4 = d;
+
+                                for (int e = 1; e < 7; e++)
+                                {
+                                    input2Validity = checkIfInputValid(e, d);
+
+                                    if (input2Validity)
+                                    {
+                                        solutionInts[4] = e;
+                                        input5 = e;
+
+                                        for (int f = 1; f < 7; f++)
+                                        {
+                                            input3Validity = checkIfInputValid(f, d, e);
+
+                                            if (input3Validity)
+                                            {
+                                                solutionInts[5] = f;
+                                                input6 = f;
+
+                                                if (cubes.Count == 2)
+                                                {
+                                                    Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                    bool testSolution = InputTestSolution(solutionInts);
+                                                    if (testSolution) return;
+                                                    
+
+                                                }
+                                                else
+                                                {
+                                                    for (int g = 1; g < 7; g++)
+                                                    {
+                                                        input7 = g;
+                                                        solutionInts[6] = g;
+
+                                                        for (int h = 1; h < 7; h++)
+                                                        {
+                                                            input2Validity = checkIfInputValid(h, g);
+
+                                                            if (input2Validity)
+                                                            {
+                                                                solutionInts[7] = h;
+                                                                input8 = h;
+
+                                                                for (int i = 1; i < 7; i++)
+                                                                {
+                                                                    input3Validity = checkIfInputValid(i, g, h);
+
+                                                                    if (input3Validity)
+                                                                    {
+                                                                        input9 = i;
+                                                                        solutionInts[8] = i;
+                                                                        if (cubes.Count == 3)
+                                                                        {
+                                                                            //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                            bool testSolution = InputTestSolution(solutionInts);
+                                                                            if (testSolution) return;
+
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            for (int j = 1; j < 7; j++)
+                                                                            {
+                                                                                input7 = j;
+                                                                                solutionInts[9] = j;
+
+                                                                                for (int k = 1; k < 7; k++)
+                                                                                {
+                                                                                    input2Validity = checkIfInputValid(k, j);
+
+                                                                                    if (input2Validity)
+                                                                                    {
+                                                                                        solutionInts[10] = k;
+                                                                                        input8 = k;
+
+                                                                                        for (int m = 1; m < 7; m++)
+                                                                                        {
+                                                                                            input3Validity = checkIfInputValid(m, j, k);
+
+                                                                                            if (input3Validity)
+                                                                                            {
+                                                                                                input9 = m;
+                                                                                                solutionInts[11] = m;
+                                                                                                if (cubes.Count == 4)
+                                                                                                {
+                                                                                                    //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                                                    bool testSolution = InputTestSolution(solutionInts);
+                                                                                                    if (testSolution) return;
+
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+
+        Debug.Log("Este nivel no se puede resolver");
+    }
+    public IEnumerator CreateSolutionCoroutine()
     {
         Debug.Log("Entering Coroutine");
         cube1Stack1.Clear();
