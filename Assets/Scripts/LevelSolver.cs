@@ -6,6 +6,7 @@ public class LevelSolver : MonoBehaviour
 {
     public LevelEditor levelEditor;
     public List<string> solutions = new List<string>();
+    public List<int> solutionInts = new List<int>();
 
     public Queue<int> cube1Stack1 = new Queue<int>();
     public Queue<int> cube1Stack2 = new Queue<int>();
@@ -30,6 +31,9 @@ public class LevelSolver : MonoBehaviour
     public int input4;
     public int input5;
     public int input6;
+    public int input7;
+    public int input8;
+    public int input9;
 
     int cube1Side1;
     int cube1Side2;
@@ -49,6 +53,14 @@ public class LevelSolver : MonoBehaviour
         input4 = 0;
         input5 = 0;
         input6 = 0;
+        input7 = 0;
+        input8 = 0;
+        input9 = 0;
+
+        for (int i = 0; i < 9; i++) //init the list so we can properly insert
+        {
+            solutionInts.Add(0);
+        }
         StartCoroutine(CreateSolution());
     }
     public void Update()
@@ -77,7 +89,7 @@ public class LevelSolver : MonoBehaviour
 
         for (int i = 1; i < 7; i++)
         {
-            cube1Stack1.Enqueue(i);
+            solutionInts[0] = i;
             //cube2Stack1.Enqueue(i);
             input1 = i;
 
@@ -87,7 +99,7 @@ public class LevelSolver : MonoBehaviour
 
                 if (input2Validity)
                 {
-                    cube1Stack2.Enqueue(j);
+                    solutionInts[1] = j;
                     //cube2Stack2.Enqueue(j);
                     input2 = j;
 
@@ -97,7 +109,7 @@ public class LevelSolver : MonoBehaviour
 
                         if (input3Validity)
                         {
-                            cube1Stack3.Enqueue(k);
+                            solutionInts[2] = k;
                             //cube2Stack3.Enqueue(k);
                             input3 = k;
 
@@ -105,57 +117,76 @@ public class LevelSolver : MonoBehaviour
 
                             for (int a = 1; a < 7; a++)
                             {
-                                cube2Stack1.Enqueue(a);
+                                solutionInts[3] = a;
                                 input4 = a;
 
                                 for (int b = 1; b < 7; b++)
                                 {
-                                    bool input4Validity = checkIfInputValid(b, a);
+                                    input2Validity = checkIfInputValid(b, a);
 
-                                    if (input4Validity)
+                                    if (input2Validity)
                                     {
-                                        cube2Stack2.Enqueue(j);
+                                        solutionInts[4] = b;
                                         input5 = b;
 
                                         for (int c = 1; c < 7; c++)
                                         {
-                                            bool input5Validity = checkIfInputValid(c, a, b);
+                                            input3Validity = checkIfInputValid(c, a, b);
 
-                                            if (input5Validity)
+                                            if (input3Validity)
                                             {
-                                                cube2Stack3.Enqueue(k);
+                                                solutionInts[5] = c;
                                                 input6 = c;
 
-                                                Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6 );
-                                                bool testSolution = InputTestSolution(input1, input2, input3, input4, input5, input6);
+                                                Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
 
-                                                if (testSolution) yield break;
-                                                yield return new WaitForSeconds(0.001f);
+                                                for (int d = 1; d < 7; d++)
+                                                {
+                                                    input7 = d;
+                                                    solutionInts[6] = d;
+
+                                                    for (int e = 1; e < 7; e++)
+                                                    {
+                                                        input2Validity = checkIfInputValid(e, d);
+
+                                                        if (input2Validity)
+                                                        {
+                                                            solutionInts[7] = e;
+                                                            input8 = e;
+
+                                                            for (int f = 1; f < 7; f++)
+                                                            {
+                                                                input3Validity = checkIfInputValid(f, d, e);
+
+                                                                if (input3Validity)
+                                                                {
+                                                                    input9 = f;
+                                                                    solutionInts[8] = f;
+
+                                                                    //bool testSolution = InputTestSolution(input1, input2, input3, input4, input5, input6, input7, input8, input9);
+                                                                    bool testSolution = InputTestSolution(solutionInts);
+                                                                    if (testSolution) yield break;
+                                                                    //yield return new WaitForSeconds(0.001f);
+                                                                    yield return null;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
+
                                     }
                                 }
-
                             }
+
                         }
                     }
-
                 }
             }
         }
 
-        Debug.Log(cube1Stack1.Count);
-        Debug.Log(cube1Stack2.Count);
-        Debug.Log(cube1Stack3.Count);
-        Debug.Log(cube2Stack1.Count);
-        Debug.Log(cube2Stack2.Count);
-        Debug.Log(cube2Stack3.Count);
-
-        foreach(int number in cube1Stack2)
-        {
-            Debug.Log(number);
-        }
-        //StartTestSolution();
+        Debug.Log("Este nivel no se puede resolver");
     }
 
     public bool InputTestSolution(int c1s1, int c1s2, int c1s3, int c2s1, int c2s2, int c2s3)
@@ -185,7 +216,71 @@ public class LevelSolver : MonoBehaviour
         }
         return true;
     }
+    public bool InputTestSolution(int c1s1, int c1s2, int c1s3, int c2s1, int c2s2, int c2s3, int c3s1, int c3s2, int c3s3)
+    {
+        cubes[0].side1Solver.number = c1s1;
+        cubes[0].side2Solver.number = c1s2;
+        cubes[0].side3Solver.number = c1s3;
 
+        cubes[0].side1Solver.oposedSide.number = 7 - c1s1;
+        cubes[0].side2Solver.oposedSide.number = 7 - c1s2;
+        cubes[0].side3Solver.oposedSide.number = 7 - c1s3;
+
+        cubes[1].side1Solver.number = c2s1;
+        cubes[1].side2Solver.number = c2s2;
+        cubes[1].side3Solver.number = c2s3;
+
+        cubes[1].side1Solver.oposedSide.number = 7 - c2s1;
+        cubes[1].side2Solver.oposedSide.number = 7 - c2s2;
+        cubes[1].side3Solver.oposedSide.number = 7 - c2s3;
+
+        cubes[2].side1Solver.number = c3s1;
+        cubes[2].side2Solver.number = c3s2;
+        cubes[2].side3Solver.number = c3s3;
+
+        cubes[2].side1Solver.oposedSide.number = 7 - c3s1;
+        cubes[2].side2Solver.oposedSide.number = 7 - c3s2;
+        cubes[2].side3Solver.oposedSide.number = 7 - c3s3;
+
+        cubes[0].UpdateCube();
+        cubes[1].UpdateCube();
+        cubes[2].UpdateCube();
+
+        if (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion() || !cubes[2].CheckCompletion())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public bool InputTestSolution(List<int> inputsToTestSolution)
+    {
+        for (int i = 0; i < cubes.Count; i++)
+        {
+            cubes[i].side1Solver.number = inputsToTestSolution[0 + 3*i];
+            cubes[i].side2Solver.number = inputsToTestSolution[1 + 3 * i];
+            cubes[i].side3Solver.number = inputsToTestSolution[2 + 3 * i];
+
+            cubes[i].side1Solver.oposedSide.number = 7 - inputsToTestSolution[0 + 3 * i]; 
+            cubes[i].side2Solver.oposedSide.number = 7 - inputsToTestSolution[1 + 3 * i]; 
+            cubes[i].side3Solver.oposedSide.number = 7 - inputsToTestSolution[2 + 3 * i]; 
+
+        }
+  
+        foreach(Cube cube in cubes)
+        {
+            cube.UpdateCube();
+        }
+
+        foreach (Cube cube in cubes)
+        {
+            if (!cube.CheckCompletion())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 
@@ -396,6 +491,11 @@ public class LevelSolver : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    public void StartButton()
+    {
+        start = true;
     }
 }
 
