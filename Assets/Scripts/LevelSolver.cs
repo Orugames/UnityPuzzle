@@ -27,6 +27,16 @@ public class LevelSolver : MonoBehaviour
     public int input1;
     public int input2;
     public int input3;
+    public int input4;
+    public int input5;
+    public int input6;
+
+    int cube1Side1;
+    int cube1Side2;
+    int cube1Side3;
+    int cube2Side1;
+    int cube2Side2;
+    int cube2Side3;
 
     public int index = 1;
 
@@ -36,6 +46,10 @@ public class LevelSolver : MonoBehaviour
         input1 = 0;
         input2 = 0;
         input3 = 0;
+        input4 = 0;
+        input5 = 0;
+        input6 = 0;
+        FillPossibleSolutionsRaw();
     }
     public void Update()
     {
@@ -51,24 +65,23 @@ public class LevelSolver : MonoBehaviour
     public void FillPossibleSolutionsRaw()
     {
         Debug.Log("Entering Coroutine");
-       
-            for (int i = 1; i < 7; i++)
+
+        for (int i = 1; i < 7; i++)
+        {
+            cube1Stack1.Enqueue(i);
+            //cube2Stack1.Enqueue(i);
+            input1 = i;
+
+            for (int j = 1; j < 7; j++)
             {
-                cube1Stack1.Enqueue(i);
-                //cube2Stack1.Enqueue(i);
-                input1 = i;
+                bool input2Validity = checkIfInputValid(j, i);
 
-                for (int j = 1; j < 7; j++)
+                if (input2Validity)
                 {
-                    bool input2Validity = checkIfInputValid(j, i);
+                    cube1Stack2.Enqueue(j);
+                    //cube2Stack2.Enqueue(j);
+                    input2 = j;
 
-                    if (input2Validity)
-                    {
-                        cube1Stack2.Enqueue(j);
-                        //cube2Stack2.Enqueue(j);
-                        input2 = j;
-
-                    }
                     for (int k = 1; k < 7; k++)
                     {
                         bool input3Validity = checkIfInputValid(k, i, j);
@@ -81,31 +94,47 @@ public class LevelSolver : MonoBehaviour
 
                             Debug.Log("Valid Combination1: " + input1 + "," + input2 + "," + input3);
 
-                        for (int a = 1; a < 7; a++)
-                        {
-                            cube2Stack1.Enqueue(a);
-                            input1 = a;
-
-                            for (int b = 0; b < 7; b++)
+                            for (int a = 1; a < 7; a++)
                             {
-                                input2Validity = checkIfInputValid(b, a);
+                                cube2Stack1.Enqueue(a);
+                                input4 = a;
 
-                                if (input2Validity)
+                                for (int b = 1; b < 7; b++)
                                 {
-                                    cube2Stack2.Enqueue(j);
-                                    input2 = j;
+                                    bool input4Validity = checkIfInputValid(b, a);
 
+                                    if (input4Validity)
+                                    {
+                                        cube2Stack2.Enqueue(j);
+                                        input5 = b;
+
+                                        for (int c = 1; c < 7; c++)
+                                        {
+                                            bool input5Validity = checkIfInputValid(c, a, b);
+
+                                            if (input5Validity)
+                                            {
+                                                cube2Stack3.Enqueue(k);
+                                                input6 = c;
+
+                                                Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6 );
+
+                                            }
+                                        }
+                                    }
                                 }
+
                             }
                         }
+                    }
 
-                    }
-                    }
                 }
             }
-        
-
+        }
+        StartTestSolution();
     }
+
+
 
 
 
@@ -170,23 +199,23 @@ public class LevelSolver : MonoBehaviour
                             cubes[1].UpdateCube();
 
 
-                            
+
 
 
                         }
                     }
                 }
             }
-            
+
         }
 
     }
 
     public void StartTestSolution()
     {
-        int cube1Side1 = cube1Stack1.Dequeue();
-        int cube1Side2 = cube1Stack2.Dequeue();
-        int cube1Side3 = cube1Stack3.Dequeue();
+        cube1Side1 = cube1Stack1.Dequeue();
+        cube1Side2 = cube1Stack2.Dequeue();
+        cube1Side3 = cube1Stack3.Dequeue();
 
         cubes[0].side1Solver.number = cube1Side1;
         cubes[0].side2Solver.number = cube1Side2;
@@ -196,9 +225,9 @@ public class LevelSolver : MonoBehaviour
         cubes[0].side2Solver.oposedSide.number = 7 - cube1Side2;
         cubes[0].side3Solver.oposedSide.number = 7 - cube1Side3;
 
-        int cube2Side1 = cube2Stack1.Dequeue();
-        int cube2Side2 = cube2Stack2.Dequeue();
-        int cube2Side3 = cube2Stack3.Dequeue();
+        cube2Side1 = cube2Stack1.Dequeue();
+        cube2Side2 = cube2Stack2.Dequeue();
+        cube2Side3 = cube2Stack3.Dequeue();
 
         cubes[1].side1Solver.number = cube2Side1;
         cubes[1].side2Solver.number = cube2Side2;
@@ -208,24 +237,61 @@ public class LevelSolver : MonoBehaviour
         cubes[1].side2Solver.oposedSide.number = 7 - cube2Side2;
         cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
 
-        bool levelValid = checkNumbersSolution();
+        bool levelValid = CheckNumbersSolution();
+
+        Debug.Log("Valid Final Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
 
     }
 
 
-    public bool checkNumbersSolution()
+    public bool CheckNumbersSolution()
     {
-        int cube2Side3 = cube2Stack3.Dequeue();
-        cubes[1].side3Solver.number = cube2Side3;
-        cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
 
         cubes[0].UpdateCube();
         cubes[1].UpdateCube();
 
         if (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion())
         {
+            Debug.Log("Invalid Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
+            cube2Side3 = cube2Stack3.Dequeue();
+            cubes[1].side3Solver.number = cube2Side3;
+            cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
+            if (index % 2 == 0)
+            {
+                cube2Side2 = cube2Stack2.Dequeue();
+                cubes[1].side2Solver.number = cube2Side2;
+                cubes[1].side2Solver.oposedSide.number = 7 - cube2Side2;
+
+                if (index % 8 == 0)
+                {
+                    cube2Side1 = cube2Stack1.Dequeue();
+                    cubes[1].side1Solver.number = cube2Side1;
+                    cubes[1].side1Solver.oposedSide.number = 7 - cube2Side1;
+
+                    if (index % 48 == 0)
+                    {
+                        cube1Side3 = cube1Stack3.Dequeue();
+                        cubes[0].side3Solver.number = cube1Side3;
+                        cubes[0].side3Solver.oposedSide.number = 7 - cube1Side3;
+
+                        if (index % 48 * 2 == 0)
+                        {
+                            cube1Side2 = cube1Stack2.Dequeue();
+                            cubes[0].side2Solver.number = cube1Side2;
+                            cubes[0].side2Solver.oposedSide.number = 7 - cube1Side2;
+
+                            if (index % 48 * 2 * 4 == 0)
+                            {
+                                cube1Side1 = cube1Stack1.Dequeue();
+                                cubes[0].side1Solver.number = cube1Side1;
+                                cubes[0].side1Solver.oposedSide.number = 7 - cube1Side1;
+                            }
+                        }
+                    }
+                }
+            }
             index++;
-            return checkNumbersSolution();
+            return CheckNumbersSolution();
         }
         return true;
     }
