@@ -49,7 +49,7 @@ public class LevelSolver : MonoBehaviour
         input4 = 0;
         input5 = 0;
         input6 = 0;
-        FillPossibleSolutionsRaw();
+        StartCoroutine(CreateSolution());
     }
     public void Update()
     {
@@ -62,9 +62,18 @@ public class LevelSolver : MonoBehaviour
             StartSolution();
         }
     }
-    public void FillPossibleSolutionsRaw()
+    public IEnumerator CreateSolution()
     {
         Debug.Log("Entering Coroutine");
+        cube1Stack1.Clear();
+        cube1Stack2.Clear();
+        cube1Stack3.Clear();
+        cube2Stack1.Clear();
+        cube2Stack2.Clear();
+        cube2Stack3.Clear();
+        index = 1;
+
+
 
         for (int i = 1; i < 7; i++)
         {
@@ -118,7 +127,10 @@ public class LevelSolver : MonoBehaviour
                                                 input6 = c;
 
                                                 Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6 );
+                                                bool testSolution = InputTestSolution(input1, input2, input3, input4, input5, input6);
 
+                                                if (testSolution) yield break;
+                                                yield return new WaitForSeconds(0.001f);
                                             }
                                         }
                                     }
@@ -131,9 +143,48 @@ public class LevelSolver : MonoBehaviour
                 }
             }
         }
-        StartTestSolution();
+
+        Debug.Log(cube1Stack1.Count);
+        Debug.Log(cube1Stack2.Count);
+        Debug.Log(cube1Stack3.Count);
+        Debug.Log(cube2Stack1.Count);
+        Debug.Log(cube2Stack2.Count);
+        Debug.Log(cube2Stack3.Count);
+
+        foreach(int number in cube1Stack2)
+        {
+            Debug.Log(number);
+        }
+        //StartTestSolution();
     }
 
+    public bool InputTestSolution(int c1s1, int c1s2, int c1s3, int c2s1, int c2s2, int c2s3)
+    {
+        cubes[0].side1Solver.number = c1s1;
+        cubes[0].side2Solver.number = c1s2;
+        cubes[0].side3Solver.number = c1s3;
+
+        cubes[0].side1Solver.oposedSide.number = 7 - c1s1;
+        cubes[0].side2Solver.oposedSide.number = 7 - c1s2;
+        cubes[0].side3Solver.oposedSide.number = 7 - c1s3;
+
+        cubes[1].side1Solver.number = c2s1;
+        cubes[1].side2Solver.number = c2s2;
+        cubes[1].side3Solver.number = c2s3;
+
+        cubes[1].side1Solver.oposedSide.number = 7 - c2s1;
+        cubes[1].side2Solver.oposedSide.number = 7 - c2s2;
+        cubes[1].side3Solver.oposedSide.number = 7 - c2s3;
+
+        cubes[0].UpdateCube();
+        cubes[1].UpdateCube();
+
+        if (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion())
+        {
+            return false;
+        }
+        return true;
+    }
 
 
 
@@ -237,25 +288,27 @@ public class LevelSolver : MonoBehaviour
         cubes[1].side2Solver.oposedSide.number = 7 - cube2Side2;
         cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
 
-        bool levelValid = CheckNumbersSolution();
+        //bool levelValid = CheckNumbersSolution();
 
-        Debug.Log("Valid Final Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
+        //Debug.Log("Valid Final Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
+        StartCoroutine(CheckNumbersSolution());
 
     }
 
 
-    public bool CheckNumbersSolution()
+    public IEnumerator CheckNumbersSolution()
     {
 
         cubes[0].UpdateCube();
         cubes[1].UpdateCube();
 
-        if (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion())
+        while (!cubes[0].CheckCompletion() || !cubes[1].CheckCompletion())
         {
             Debug.Log("Invalid Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
             cube2Side3 = cube2Stack3.Dequeue();
             cubes[1].side3Solver.number = cube2Side3;
             cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
+
             if (index % 2 == 0)
             {
                 cube2Side2 = cube2Stack2.Dequeue();
@@ -264,6 +317,7 @@ public class LevelSolver : MonoBehaviour
 
                 if (index % 8 == 0)
                 {
+
                     cube2Side1 = cube2Stack1.Dequeue();
                     cubes[1].side1Solver.number = cube2Side1;
                     cubes[1].side1Solver.oposedSide.number = 7 - cube2Side1;
@@ -274,13 +328,13 @@ public class LevelSolver : MonoBehaviour
                         cubes[0].side3Solver.number = cube1Side3;
                         cubes[0].side3Solver.oposedSide.number = 7 - cube1Side3;
 
-                        if (index % 48 * 2 == 0)
+                        if (index % 96 == 0)
                         {
                             cube1Side2 = cube1Stack2.Dequeue();
                             cubes[0].side2Solver.number = cube1Side2;
                             cubes[0].side2Solver.oposedSide.number = 7 - cube1Side2;
 
-                            if (index % 48 * 2 * 4 == 0)
+                            if (index % 384 == 0)
                             {
                                 cube1Side1 = cube1Stack1.Dequeue();
                                 cubes[0].side1Solver.number = cube1Side1;
@@ -290,10 +344,15 @@ public class LevelSolver : MonoBehaviour
                     }
                 }
             }
+            //Debug.Log(cube1Stack1.Count);
             index++;
-            return CheckNumbersSolution();
+
+            cubes[0].UpdateCube();
+            cubes[1].UpdateCube();
+            yield return new WaitForSeconds(0.01f);
+
         }
-        return true;
+        yield return new WaitForEndOfFrame();
     }
 
     public bool checkIfInputValid(int inputToTest, int compared1, int compared2)

@@ -113,6 +113,8 @@ public class LevelEditor : MonoBehaviour
     private void Update()
     {
         OnMouseDown();
+        UpdateLevel();
+
     }
 
     private void UpdateLevelLists()
@@ -211,7 +213,6 @@ public class LevelEditor : MonoBehaviour
             {
                 MakeFixedNumbersLogic();
             }
-            UpdateLevel();
 
         }
 
