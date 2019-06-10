@@ -57,7 +57,7 @@ public class LevelSolver : MonoBehaviour
         input8 = 0;
         input9 = 0;
 
-        for (int i = 0; i < 9; i++) //init the list so we can properly insert
+        for (int i = 0; i < cubes.Count * 3; i++) //init the list so we can properly insert
         {
             solutionInts.Add(0);
         }
@@ -90,7 +90,6 @@ public class LevelSolver : MonoBehaviour
         for (int i = 1; i < 7; i++)
         {
             solutionInts[0] = i;
-            //cube2Stack1.Enqueue(i);
             input1 = i;
 
             for (int j = 1; j < 7; j++)
@@ -100,7 +99,6 @@ public class LevelSolver : MonoBehaviour
                 if (input2Validity)
                 {
                     solutionInts[1] = j;
-                    //cube2Stack2.Enqueue(j);
                     input2 = j;
 
                     for (int k = 1; k < 7; k++)
@@ -110,10 +108,7 @@ public class LevelSolver : MonoBehaviour
                         if (input3Validity)
                         {
                             solutionInts[2] = k;
-                            //cube2Stack3.Enqueue(k);
                             input3 = k;
-
-                            Debug.Log("Valid Combination1: " + input1 + "," + input2 + "," + input3);
 
                             for (int a = 1; a < 7; a++)
                             {
@@ -138,41 +133,53 @@ public class LevelSolver : MonoBehaviour
                                                 solutionInts[5] = c;
                                                 input6 = c;
 
-                                                Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
-
-                                                for (int d = 1; d < 7; d++)
+                                                if (cubes.Count == 2)
                                                 {
-                                                    input7 = d;
-                                                    solutionInts[6] = d;
+                                                    Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                    bool testSolution = InputTestSolution(solutionInts);
+                                                    if (testSolution) yield break;
+                                                    yield return null;
 
-                                                    for (int e = 1; e < 7; e++)
+                                                }
+                                                else
+                                                {
+                                                    for (int d = 1; d < 7; d++)
                                                     {
-                                                        input2Validity = checkIfInputValid(e, d);
+                                                        input7 = d;
+                                                        solutionInts[6] = d;
 
-                                                        if (input2Validity)
+                                                        for (int e = 1; e < 7; e++)
                                                         {
-                                                            solutionInts[7] = e;
-                                                            input8 = e;
+                                                            input2Validity = checkIfInputValid(e, d);
 
-                                                            for (int f = 1; f < 7; f++)
+                                                            if (input2Validity)
                                                             {
-                                                                input3Validity = checkIfInputValid(f, d, e);
+                                                                solutionInts[7] = e;
+                                                                input8 = e;
 
-                                                                if (input3Validity)
+                                                                for (int f = 1; f < 7; f++)
                                                                 {
-                                                                    input9 = f;
-                                                                    solutionInts[8] = f;
+                                                                    input3Validity = checkIfInputValid(f, d, e);
 
-                                                                    //bool testSolution = InputTestSolution(input1, input2, input3, input4, input5, input6, input7, input8, input9);
-                                                                    bool testSolution = InputTestSolution(solutionInts);
-                                                                    if (testSolution) yield break;
-                                                                    //yield return new WaitForSeconds(0.001f);
-                                                                    yield return null;
+                                                                    if (input3Validity)
+                                                                    {
+                                                                        input9 = f;
+                                                                        solutionInts[8] = f;
+                                                                        if (cubes.Count == 3)
+                                                                        {
+                                                                            Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                            bool testSolution = InputTestSolution(solutionInts);
+                                                                            if (testSolution) yield break;
+                                                                            yield return null;
+
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
+
                                             }
                                         }
 
@@ -257,17 +264,17 @@ public class LevelSolver : MonoBehaviour
     {
         for (int i = 0; i < cubes.Count; i++)
         {
-            cubes[i].side1Solver.number = inputsToTestSolution[0 + 3*i];
+            cubes[i].side1Solver.number = inputsToTestSolution[0 + 3 * i];
             cubes[i].side2Solver.number = inputsToTestSolution[1 + 3 * i];
             cubes[i].side3Solver.number = inputsToTestSolution[2 + 3 * i];
 
-            cubes[i].side1Solver.oposedSide.number = 7 - inputsToTestSolution[0 + 3 * i]; 
-            cubes[i].side2Solver.oposedSide.number = 7 - inputsToTestSolution[1 + 3 * i]; 
-            cubes[i].side3Solver.oposedSide.number = 7 - inputsToTestSolution[2 + 3 * i]; 
+            cubes[i].side1Solver.oposedSide.number = 7 - inputsToTestSolution[0 + 3 * i];
+            cubes[i].side2Solver.oposedSide.number = 7 - inputsToTestSolution[1 + 3 * i];
+            cubes[i].side3Solver.oposedSide.number = 7 - inputsToTestSolution[2 + 3 * i];
 
         }
-  
-        foreach(Cube cube in cubes)
+
+        foreach (Cube cube in cubes)
         {
             cube.UpdateCube();
         }
@@ -281,115 +288,6 @@ public class LevelSolver : MonoBehaviour
         }
         return true;
     }
-
-
-
-    public void CheckSolution()
-    {
-
-
-        for (int x = 0; x < cubes.Count; x++)
-        {
-            if (x == 0)
-            {
-                for (int i = 1; i < cube1Stack1.Count; i++)
-                {
-                    int cube1Side1 = cube1Stack1.Dequeue();
-
-                    for (int j = 1; j < cube1Stack2.Count; j++)
-                    {
-                        int cube1Side2 = cube1Stack2.Dequeue();
-
-                        for (int k = 1; k < cube1Stack3.Count; k++)
-                        {
-                            int cube1Side3 = cube1Stack3.Dequeue();
-
-
-                            cubes[x].side1Solver.number = cube1Side1;
-                            cubes[x].side2Solver.number = cube1Side2;
-                            cubes[x].side3Solver.number = cube1Side3;
-
-
-                            cubes[x].side1Solver.oposedSide.number = 7 - cube1Side1;
-                            cubes[x].side2Solver.oposedSide.number = 7 - cube1Side2;
-                            cubes[x].side3Solver.oposedSide.number = 7 - cube1Side3;
-
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 1; i < cube2Stack1.Count; i++)
-                {
-                    int cube2Side1 = cube2Stack1.Dequeue();
-
-                    for (int j = 1; j < cube2Stack2.Count; j++)
-                    {
-                        int cube2Side2 = cube2Stack2.Dequeue();
-
-                        for (int k = 1; k < cube2Stack3.Count; k++)
-                        {
-                            int cube2Side3 = cube2Stack3.Dequeue();
-
-                            cubes[x].side1Solver.number = cube2Side1;
-                            cubes[x].side2Solver.number = cube2Side2;
-                            cubes[x].side3Solver.number = cube2Side3;
-
-
-                            cubes[x].side1Solver.oposedSide.number = 7 - cube2Side1;
-                            cubes[x].side2Solver.oposedSide.number = 7 - cube2Side2;
-                            cubes[x].side3Solver.oposedSide.number = 7 - cube2Side3;
-
-                            cubes[0].UpdateCube();
-                            cubes[1].UpdateCube();
-
-
-
-
-
-                        }
-                    }
-                }
-            }
-
-        }
-
-    }
-
-    public void StartTestSolution()
-    {
-        cube1Side1 = cube1Stack1.Dequeue();
-        cube1Side2 = cube1Stack2.Dequeue();
-        cube1Side3 = cube1Stack3.Dequeue();
-
-        cubes[0].side1Solver.number = cube1Side1;
-        cubes[0].side2Solver.number = cube1Side2;
-        cubes[0].side3Solver.number = cube1Side3;
-
-        cubes[0].side1Solver.oposedSide.number = 7 - cube1Side1;
-        cubes[0].side2Solver.oposedSide.number = 7 - cube1Side2;
-        cubes[0].side3Solver.oposedSide.number = 7 - cube1Side3;
-
-        cube2Side1 = cube2Stack1.Dequeue();
-        cube2Side2 = cube2Stack2.Dequeue();
-        cube2Side3 = cube2Stack3.Dequeue();
-
-        cubes[1].side1Solver.number = cube2Side1;
-        cubes[1].side2Solver.number = cube2Side2;
-        cubes[1].side3Solver.number = cube2Side3;
-
-        cubes[1].side1Solver.oposedSide.number = 7 - cube2Side1;
-        cubes[1].side2Solver.oposedSide.number = 7 - cube2Side2;
-        cubes[1].side3Solver.oposedSide.number = 7 - cube2Side3;
-
-        //bool levelValid = CheckNumbersSolution();
-
-        //Debug.Log("Valid Final Combination: " + cube1Side1 + "," + cube1Side2 + "," + cube1Side3 + " 2: " + cube2Side1 + "," + cube2Side2 + "," + cube2Side3);
-        StartCoroutine(CheckNumbersSolution());
-
-    }
-
 
     public IEnumerator CheckNumbersSolution()
     {
