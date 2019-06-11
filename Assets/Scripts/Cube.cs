@@ -45,7 +45,7 @@ public class Cube : MonoBehaviour
         {
             color = new Color();
 
-            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
+            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)] *0.95f;
         }
     }
 

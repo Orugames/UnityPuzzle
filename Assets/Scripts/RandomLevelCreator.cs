@@ -1,22 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class RandomLevelCreator : MonoBehaviour
 {
     public int numberOfCubes = 2;
     public int sidesCombined = 2;
-    public GameObject cubePrefab;
-    int startingCubePosInitial = 0;
-    int startingCubePos = 0;
-    public Vector2 initialCubePos;
-    public Vector2 cubePos;
+    public LevelSolver levelSolver;
+    public LevelEditor levelEditor;
     public List<GameObject> cubesCreatedGO = new List<GameObject>();
     public List<Cube> cubesCreated = new List<Cube>();
     public List<CubeSide> cubeSidesCreated = new List<CubeSide>();
+    public List<Vector2> sidesCreatedPositions = new List<Vector2>();
 
 
-    public GameObject prefab;
+
+    public GameObject cubeContainer;
+    public GameObject cubePrefab;
     public GameObject cube1;
     public GameObject cube2;
     public GameObject cube3;
@@ -37,8 +38,11 @@ public class RandomLevelCreator : MonoBehaviour
     public GameObject cube18;
     public GameObject cube19;
     public GameObject cube20;
-    GameObject cubeSelected;
 
+    GameObject cubeSelected;
+    public bool start;
+    public bool running;
+    public bool solved;
 
     public int[] positionOfCubes = {0, 0, 0, 0, 0, //0,0 is the center of the map (0,0)
                                     0, 0, 0, 0, 0,
@@ -47,26 +51,86 @@ public class RandomLevelCreator : MonoBehaviour
                                     0, 0, 0, 0, 0};
 
 
-    public bool LevelGenerator(Vector2 firstPos, Vector2 secondPos)
+    private void Update()
     {
-        startingCubePosInitial = Random.Range(0, 26);
-        initialCubePos = GetPositionInWorldOfCubes(startingCubePosInitial);
+        cubeContainer = GameObject.Find("CubeContainer");
+        if (!start)
+        {
+            return;
+        }
+        if (!solved && !running)
+        {
+            LevelGenerator(numberOfCubes, sidesCombined);
+        }
+        if (running)
+        {
+            if (levelSolver.solvedLevel)
+            {
+                solved = true;
+            }
+        }
 
-        GameObject firstCube = Instantiate(cubePrefab, initialCubePos,Quaternion.identity);
+    }
+    public bool LevelGenerator(int nCubes, int nSamePos)
+    {
+        running = true;
+        foreach (GameObject cubeGO in cubesCreatedGO)
+        {
+            Destroy(cubeGO);
+        }
+        cubesCreated.Clear();
+        cubesCreatedGO.Clear();
+        cubeSidesCreated.Clear();
+        sidesCreatedPositions.Clear();
 
-        return false;
+        List<int> intPos = new List<int>();
+        //Random cube generator
 
+        for (int i = 0; i < nCubes; i++)
+        {
+            intPos.Add(Random.Range(1, 26));
+            Vector2 initialPos = GetPositionInWorldOfCubes(intPos[i]);
+            PickPrefabToPlace(Random.Range(1, 21));
+            GameObject newCube = Instantiate(cubePrefab, initialPos, Quaternion.identity, cubeContainer.transform);
+            newCube.transform.Rotate(newCube.transform.forward, 90 * Random.Range(0, 4));
+            cubesCreated.Add(newCube.GetComponent<Cube>());
+            cubesCreatedGO.Add(newCube);
+            newCube.GetComponent<Cube>().UpdateCube();
+        }
+        //Add sides
+        foreach(Cube cube in cubesCreated)
+        {
+            foreach (Transform child in cube.transform)
+            {
+                cubeSidesCreated.Add(child.GetComponent<CubeSide>());
+                sidesCreatedPositions.Add(child.position);
+            }
+        }
+        //Check combined Sides
+        int totalSharedPos = sidesCreatedPositions.GroupBy(_ => _).Where(_ => _.Count() > 1).Sum(_ => _.Count());
+        if (totalSharedPos < nSamePos)
+        {
+            return LevelGenerator(nCubes,nSamePos);
+        }
 
+        levelEditor.CheckForDuplicates();
+        //Init the list for the solver
+        //levelSolver.cubes = cubesCreated;
 
+        Invoke("StartSolver",1f);
+        //levelSolver.StartSolution();
+
+        return true;
+
+    }
+    void StartSolver()
+    {
+        levelSolver.startCoroutine = true;
     }
 
     public void StartLevelCreation()
     {
-        startingCubePosInitial = Random.Range(0, 26);
-        startingCubePos = Random.Range(0, 26);
-        bool levelCorrect = LevelGenerator(initialCubePos, cubePos);
 
-        if (!levelCorrect) StartLevelCreation();
         
 
     }
@@ -77,77 +141,76 @@ public class RandomLevelCreator : MonoBehaviour
         int row = positionInArray / 4;
         int column = positionInArray - row * 5;
 
-        position.x = row;
-        position.y = column;
+        position.x = row - 5;
+        position.y = column + 5;
         return position;
     }
 
-    public GameObject PickPrefabToPlace(int selection)
+    public void PickPrefabToPlace(int selection)
     {
-        GameObject prefab = new GameObject();
         switch (selection)
         {
             case 1:
-                prefab = cube1;
+                cubePrefab = cube1;
                 break;
             case 2:
-                prefab = cube2;
+                cubePrefab = cube2;
                 break;
             case 3:
-                prefab = cube3;
+                cubePrefab = cube3;
                 break;
             case 4:
-                prefab = cube4;
+                cubePrefab = cube4;
                 break;
             case 5:
-                prefab = cube5;
+                cubePrefab = cube5;
                 break;
             case 6:
-                prefab = cube6;
+                cubePrefab = cube6;
                 break;
             case 7:
-                prefab = cube7;
+                cubePrefab = cube7;
                 break;
             case 8:
-                prefab = cube8;
+                cubePrefab = cube8;
                 break;
             case 9:
-                prefab = cube9;
+                cubePrefab = cube9;
                 break;
             case 10:
-                prefab = cube10;
+                cubePrefab = cube10;
                 break;
             case 11:
-                prefab = cube11;
+                cubePrefab = cube11;
                 break;
             case 12:
-                prefab = cube12;
+                cubePrefab = cube12;
                 break;
             case 13:
-                prefab = cube13;
+                cubePrefab = cube13;
                 break;
             case 14:
-                prefab = cube14;
+                cubePrefab = cube14;
                 break;
             case 15:
-                prefab = cube15;
+                cubePrefab = cube15;
                 break;
             case 16:
-                prefab = cube16;
+                cubePrefab = cube16;
                 break;
             case 17:
-                prefab = cube17;
+                cubePrefab = cube17;
                 break;
             case 18:
-                prefab = cube18;
+                cubePrefab = cube18;
                 break;
             case 19:
-                prefab = cube19;
+                cubePrefab = cube19;
                 break;
             case 20:
-                prefab = cube20;
+                cubePrefab = cube20;
                 break;
         }
-        return prefab;
+
     }
 }

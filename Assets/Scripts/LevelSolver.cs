@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelSolver : MonoBehaviour
 {
     public LevelEditor levelEditor;
+    public RandomLevelCreator randomLevelCreator;
     public List<string> solutions = new List<string>();
     public List<int> solutionInts = new List<int>();
 
@@ -24,6 +25,7 @@ public class LevelSolver : MonoBehaviour
     public bool validNumber;
     public bool validCombination;
     public bool start;
+    public bool startCoroutine;
 
     public int input1;
     public int input2;
@@ -43,10 +45,11 @@ public class LevelSolver : MonoBehaviour
     int cube2Side3;
 
     public int index = 1;
+    public bool solvedLevel;
 
     public void StartSolution()
     {
-        start = false;
+
         input1 = 0;
         input2 = 0;
         input3 = 0;
@@ -61,15 +64,21 @@ public class LevelSolver : MonoBehaviour
         {
             solutionInts.Add(0);
         }
-        CreateSolution();
+        index = 1;
+        if (start) CreateSolution();
+        else if (startCoroutine) StartCoroutine(CreateSolutionCoroutine());
+        start = false;
+        startCoroutine = false;
     }
     public void Update()
     {
-        if (levelEditor.cubes.Count > 1)
+        cubes = randomLevelCreator.cubesCreated;
+        //cubes = levelEditor.cubes;
+        if (cubes.Count < 1)
         {
-            cubes = levelEditor.cubes;
+            return;
         }
-        if (start)
+        if (start || startCoroutine)
         {
             StartSolution();
         }
@@ -237,8 +246,12 @@ public class LevelSolver : MonoBehaviour
         cube2Stack1.Clear();
         cube2Stack2.Clear();
         cube2Stack3.Clear();
-        index = 1;
-
+        //index = 1;
+        if (index >= 2300)
+        {
+            startCoroutine = false;
+            yield break;
+        }
 
 
         for (int a = 1; a < 7; a++)
@@ -290,8 +303,8 @@ public class LevelSolver : MonoBehaviour
                                                 if (cubes.Count == 2)
                                                 {
                                                     Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
-                                                    bool testSolution = InputTestSolution(solutionInts);
-                                                    if (testSolution) yield break;
+                                                    solvedLevel = InputTestSolution(solutionInts);
+                                                    if (solvedLevel) yield break;
                                                     yield return null;
 
                                                 }
@@ -322,8 +335,8 @@ public class LevelSolver : MonoBehaviour
                                                                         if (cubes.Count == 3)
                                                                         {
                                                                             //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
-                                                                            bool testSolution = InputTestSolution(solutionInts);
-                                                                            if (testSolution) yield break;
+                                                                            solvedLevel = InputTestSolution(solutionInts);
+                                                                            if (solvedLevel) yield break;
                                                                             yield return null;
 
                                                                         }
@@ -354,8 +367,8 @@ public class LevelSolver : MonoBehaviour
                                                                                                 if (cubes.Count == 4)
                                                                                                 {
                                                                                                     //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
-                                                                                                    bool testSolution = InputTestSolution(solutionInts);
-                                                                                                    if (testSolution) yield break;
+                                                                                                    solvedLevel = InputTestSolution(solutionInts);
+                                                                                                    if (solvedLevel) yield break;
                                                                                                     yield return null;
 
                                                                                                 }
@@ -385,7 +398,7 @@ public class LevelSolver : MonoBehaviour
             }
         }
 
-
+        startCoroutine = false;
 
         Debug.Log("Este nivel no se puede resolver");
     }
@@ -456,6 +469,7 @@ public class LevelSolver : MonoBehaviour
 
     public bool InputTestSolution(List<int> inputsToTestSolution)
     {
+        index++;
         for (int i = 0; i < cubes.Count; i++)
         {
             cubes[i].side1Solver.number = inputsToTestSolution[0 + 3 * i];
@@ -480,6 +494,7 @@ public class LevelSolver : MonoBehaviour
                 return false;
             }
         }
+        Debug.Log("LevelSolved");
         return true;
     }
 
@@ -589,6 +604,11 @@ public class LevelSolver : MonoBehaviour
     {
         solutionInts.Clear();
         start = true;
+    }
+    public void StartButtonCoroutine()
+    {
+        solutionInts.Clear();
+        startCoroutine = true;
     }
 }
 
