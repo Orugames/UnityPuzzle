@@ -113,7 +113,10 @@ public class RandomLevelCreator : MonoBehaviour
             return LevelGenerator(nCubes,nSamePos);
         }
 
-        levelEditor.CheckForDuplicates();
+        //Check no cube without combined side
+        //levelEditor.UpdateLevelLists();
+        //levelEditor.CheckForDuplicates();
+       
         //Init the list for the solver
         //levelSolver.cubes = cubesCreated;
 
@@ -125,14 +128,27 @@ public class RandomLevelCreator : MonoBehaviour
     }
     void StartSolver()
     {
-        levelSolver.startCoroutine = true;
+        levelEditor.CheckForDuplicates();
+        foreach (Cube cube in cubesCreated)
+        {
+            int counter = 0;
+            foreach (Transform child in cube.transform)
+            {
+                if (child.GetComponent<CubeSide>().combinedCube) counter++;
+            }
+            if (counter == 0)
+            {
+                LevelGenerator(numberOfCubes, sidesCombined);
+                return;
+            }
+        }
+        levelSolver.start = true;
+
     }
 
     public void StartLevelCreation()
     {
-
-        
-
+        start = true;
     }
 
     public Vector2 GetPositionInWorldOfCubes(int positionInArray)
@@ -141,8 +157,8 @@ public class RandomLevelCreator : MonoBehaviour
         int row = positionInArray / 4;
         int column = positionInArray - row * 5;
 
-        position.x = row - 5;
-        position.y = column + 5;
+        position.x = row - 3f;
+        position.y = column + 3f;
         return position;
     }
 

@@ -117,7 +117,7 @@ public class LevelEditor : MonoBehaviour
 
     }
 
-    private void UpdateLevelLists()
+    public void UpdateLevelLists()
     {
         cubes.Clear();
         cubeSides.Clear();
@@ -442,6 +442,8 @@ public class LevelEditor : MonoBehaviour
                     cubeSides[k].similarCubeSides.Add(cubeSides[i]);
 
                     cubeSides[k].GetComponent<BoxCollider>().enabled = false;
+                    cubeSides[k].numberText.enabled = false;
+                    cubeSides[k].spriteParent.SetActive(false);
 
                     cubeSides[i].UpdateSide();
                     cubeSides[k].UpdateSide();
@@ -472,10 +474,13 @@ public class LevelEditor : MonoBehaviour
                     cubeSides[i].similarCubeSides.Remove(cubeSides[k]);
                     cubeSides[k].similarCubeSides.Remove(cubeSides[i]);
 
-                    cubeSides[i].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+
                     cubeSides[i].GetComponent<BoxCollider>().enabled = true;
-                    cubeSides[k].transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+                    cubeSides[i].numberText.enabled = true;
+                    cubeSides[i].spriteParent.SetActive(true);
                     cubeSides[k].GetComponent<BoxCollider>().enabled = true;
+                    cubeSides[k].numberText.enabled = true;
+                    cubeSides[k].spriteParent.SetActive(true);
                 }
                 
                

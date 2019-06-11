@@ -23,6 +23,7 @@ public class CubeSide : MonoBehaviour
     public GameObject markerRight;
     public GameObject markerDown;
     public GameObject correctCubeDot;
+    public GameObject spriteParent;
     public bool fixedNumber;
     public bool modifyValues;
     public bool combinedCube;
@@ -52,6 +53,8 @@ public class CubeSide : MonoBehaviour
         cubeParent = transform.parent.GetComponent<Cube>();
         cubeSideOwnColor = cubeParent.color;
         numberText.color = Color.white;
+        numberText.text = number.ToString();
+        numberText.transform.eulerAngles = Vector3.zero;
         posText.color = Color.black;
         position = transform.position;
 
@@ -61,7 +64,6 @@ public class CubeSide : MonoBehaviour
             oposedSideGO = oposedSide.gameObject;
         }
 
-        numberText.text = number.ToString();
         UpdateMarker();
         int x = (int)transform.position.x;
         int y = (int)transform.position.y;

@@ -917,6 +917,7 @@ MonoBehaviour:
   markerRight: {fileID: 7789825195131318129}
   markerDown: {fileID: 5028873386084967102}
   correctCubeDot: {fileID: 8270043644383489620}
+  spriteParent: {fileID: 3353249460876229628}
   fixedNumber: 0
   modifyValues: 0
   combinedCube: 0
