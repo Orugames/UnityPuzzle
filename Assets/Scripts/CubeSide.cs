@@ -58,6 +58,7 @@ public class CubeSide : MonoBehaviour
         //upright
         numberText.transform.eulerAngles = Vector3.zero;
         spriteParent.transform.eulerAngles = Vector3.zero;
+        //correctCubeDot.transform.localEulerAngles = new Vector3(-90, 0, 0);
 
         posText.color = Color.black;
         position = transform.position;
