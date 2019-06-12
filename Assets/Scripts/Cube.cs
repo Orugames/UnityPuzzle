@@ -18,6 +18,7 @@ public class Cube : MonoBehaviour
     public List<int> cubeSidesNumbers = new List<int>();
     public List<Color> presetColors = new List<Color> { Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
     public markers chosenMarker = markers.top;
+    public int chosenMarkerNumber = 0;
 
     public CubeSide side1Solver;
     public CubeSide side2Solver;
@@ -91,15 +92,19 @@ public class Cube : MonoBehaviour
         {
             case 1:
                 chosenMarker = markers.top;
+                chosenMarkerNumber = 1;
                 break;
             case 2:
                 chosenMarker = markers.left;
+                chosenMarkerNumber = 2;
                 break;
             case 3:
                 chosenMarker = markers.right;
+                chosenMarkerNumber = 3;
                 break;
             case 4:
                 chosenMarker = markers.down;
+                chosenMarkerNumber = 4;
                 break;
 
         }
