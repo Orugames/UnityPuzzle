@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using System.Linq;
 
 public class RandomLevelCreator : MonoBehaviour
@@ -71,6 +72,13 @@ public class RandomLevelCreator : MonoBehaviour
         }
 
     }
+
+    public void ButtonStartLevelGeneration()
+    {
+        int nCubes = int.Parse(GameObject.Find("NcubesInput").GetComponent<TMP_InputField>().text);
+        int nSamePos = int.Parse(GameObject.Find("NCombinedSidesInput").GetComponent<TMP_InputField>().text);
+        LevelGenerator(nCubes, nSamePos);
+    }
     public bool LevelGenerator(int nCubes, int nSamePos)
     {
         running = true;
@@ -92,7 +100,8 @@ public class RandomLevelCreator : MonoBehaviour
             Vector2 initialPos = GetPositionInWorldOfCubes(intPos[i]);
             PickPrefabToPlace(Random.Range(1, 21));
             GameObject newCube = Instantiate(cubePrefab, initialPos, Quaternion.identity, cubeContainer.transform);
-            newCube.transform.Rotate(newCube.transform.forward, 90 * Random.Range(0, 4));
+            //newCube.transform.Rotate(newCube.transform.forward, 90 * Random.Range(0, 4));
+            newCube.GetComponent<Cube>().numbersRotations = Random.Range(0, 4);
             cubesCreated.Add(newCube.GetComponent<Cube>());
             cubesCreatedGO.Add(newCube);
             newCube.GetComponent<Cube>().UpdateCube();
@@ -108,7 +117,8 @@ public class RandomLevelCreator : MonoBehaviour
         }
         //Check combined Sides
         int totalSharedPos = sidesCreatedPositions.GroupBy(_ => _).Where(_ => _.Count() > 1).Sum(_ => _.Count());
-        if (totalSharedPos < nSamePos)
+        Debug.Log(totalSharedPos);
+        if (totalSharedPos < nSamePos ) 
         {
             return LevelGenerator(nCubes,nSamePos);
         }

@@ -393,15 +393,15 @@ public class LevelEditor : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
 
-                    cubeSelected.transform.Rotate(cubeSelected.transform.forward, 90);
+                    cubeSelected.GetComponent<Cube>().numbersRotations += 1;
 
-                    foreach (Transform child in cubeSelected.transform) //keep numbers upwards
+                    /*foreach (Transform child in cubeSelected.transform) //keep numbers upwards
                     {
                         CubeSide cubeSide = child.GetComponent<CubeSide>();
                         cubeSide.numberText.transform.Rotate(cubeSelected.transform.forward, -90);
                         //cubeSide.posText.transform.Rotate(cubeSelected.transform.forward, -90);
                     }
-                    //prefabRotate = false;
+                    //prefabRotate = false;*/
                     prefabReadyToRotate = false;
                 }
             }

@@ -10,6 +10,7 @@ public class Cube : MonoBehaviour
     public Color color;
     public Vector2 position;
     public Quaternion rotation;
+    public int numbersRotations;
     public bool cubeCompleted;
     public GameObject prefab;
     public int prefabNum;
@@ -54,7 +55,8 @@ public class Cube : MonoBehaviour
     public void UpdateCube()
     {
         position = transform.position;
-        rotation = transform.rotation;
+        if (numbersRotations > 3) numbersRotations = 0;
+        transform.eulerAngles = new Vector3(0,0, numbersRotations * 90);
         cubeSidesNumbers.Clear();
         cubeSides.Clear();
         foreach (Transform child in transform)
