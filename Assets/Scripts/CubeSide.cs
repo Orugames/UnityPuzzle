@@ -183,16 +183,16 @@ public class CubeSide : MonoBehaviour
                 switch (cubeParentSent.numbersRotations)
                 {
                     case 0:
-                        markerTop.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerTop);
                         break;
                     case 1:
-                        markerLeft.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerLeft);
                         break;
                     case 2:
-                        markerDown.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerDown);
                         break;
                     case 3:
-                        markerRight.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerRight);
                         break;
                 }
                 break;
@@ -201,16 +201,16 @@ public class CubeSide : MonoBehaviour
                 switch (cubeParentSent.numbersRotations)
                 {
                     case 0:
-                        markerLeft.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerLeft);
                         break;
                     case 1:
-                        markerDown.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerDown);
                         break;
                     case 2:
-                        markerRight.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerRight);
                         break;
                     case 3:
-                        markerTop.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerTop);
                         break;
                 }
                 break;
@@ -219,16 +219,16 @@ public class CubeSide : MonoBehaviour
                 switch (cubeParentSent.numbersRotations)
                 {
                     case 0:
-                        markerDown.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerDown);
                         break;
                     case 1:
-                        markerRight.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerRight);
                         break;
                     case 2:
-                        markerTop.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerTop);
                         break;
                     case 3:
-                        markerLeft.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerLeft);
                         break;
                 }
                 break;
@@ -237,21 +237,30 @@ public class CubeSide : MonoBehaviour
                 switch (cubeParentSent.numbersRotations)
                 {
                     case 0:
-                        markerRight.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerRight);
                         break;
                     case 1:
-                        markerTop.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerTop);
                         break;
                     case 2:
-                        markerLeft.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerLeft);
                         break;
                     case 3:
-                        markerDown.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
+                        ColorMarkerCombined(cubeParentColorSent, markerDown);
                         break;
                 }
                 break;
 
         }
+    }
+
+    private void ColorMarkerCombined(Color cubeParentColorSent, GameObject markerSentToColor)
+    {
+        if (markerSentToColor.GetComponent<SpriteRenderer>().color != originalColor)
+        {
+            markerSentToColor.GetComponent<SpriteRenderer>().color += cubeParentColorSent; //we add the colors together
+        }
+        else markerSentToColor.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
     }
 
     private void CombinedSideLogic()

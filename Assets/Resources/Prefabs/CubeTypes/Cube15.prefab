@@ -52,6 +52,7 @@ MonoBehaviour:
   color: {r: 0, g: 0, b: 0, a: 0}
   position: {x: 0, y: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
+  numbersRotations: 0
   cubeCompleted: 0
   prefab: {fileID: 7034880387049017490}
   prefabNum: 15
@@ -59,12 +60,10 @@ MonoBehaviour:
   cubeSidesNumbers: 
   presetColors:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 1, a: 1}
-  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
   chosenMarker: 0
+  chosenMarkerNumber: 0
   side1Solver: {fileID: 7015374626086370014}
   side2Solver: {fileID: 972062596721895774}
   side3Solver: {fileID: 5305254917068725865}

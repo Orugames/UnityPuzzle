@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+//using System;
 
 public class RandomLevelCreator : MonoBehaviour
 {
@@ -123,19 +124,76 @@ public class RandomLevelCreator : MonoBehaviour
             return LevelGenerator(nCubes,nSamePos);
         }
 
-        //Check no cube without combined side
-        //levelEditor.UpdateLevelLists();
-        //levelEditor.CheckForDuplicates();
-       
-        //Init the list for the solver
-        //levelSolver.cubes = cubesCreated;
+        CenterLevelCreated();
+        //If still doesnt meet the criteria
 
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.x < -2 || side.transform.position.x > 2 || side.transform.position.y < -5 || side.transform.position.y > 5)
+            {
+                return LevelGenerator(nCubes, nSamePos);
+            }
+        }
         Invoke("StartSolver",1f);
-        //levelSolver.StartSolution();
 
         return true;
 
     }
+
+    private void CenterLevelCreated()
+    {
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.x < -2)
+            {
+                foreach (GameObject cube in cubesCreatedGO)
+                {
+                    cube.transform.Translate(Vector3.right, Space.World);
+                }
+            }
+        }
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.x > 2)
+            {
+                foreach (GameObject cube in cubesCreatedGO)
+                {
+                    cube.transform.Translate(-Vector3.right, Space.World);
+                }
+            }
+        }
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.y > 5)
+            {
+                foreach (GameObject cube in cubesCreatedGO)
+                {
+                    cube.transform.Translate(Vector3.up, Space.World);
+                }
+            }
+        }
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.y < -5)
+            {
+                foreach (GameObject cube in cubesCreatedGO)
+                {
+                    cube.transform.Translate(Vector3.down, Space.World);
+                }
+            }
+        }
+
+        //If still doesnt meet the criteria
+
+        foreach (CubeSide side in cubeSidesCreated)
+        {
+            if (side.transform.position.x < -2 || side.transform.position.x > 2 || side.transform.position.y < -5 || side.transform.position.y > 5)
+            {
+              
+            }
+        }
+    }
+
     void StartSolver()
     {
         levelEditor.CheckForDuplicates();
@@ -152,6 +210,7 @@ public class RandomLevelCreator : MonoBehaviour
                 return;
             }
         }
+        levelSolver.sidesSamePos = sidesCombined;
         levelSolver.start = true;
 
     }

@@ -45,6 +45,7 @@ public class LevelSolver : MonoBehaviour
     int cube2Side3;
 
     public int index = 1;
+    public int sidesSamePos = 1;
     public bool solvedLevel;
 
     public void StartSolution()
@@ -210,44 +211,126 @@ public class LevelSolver : MonoBehaviour
                                                                                                 }
                                                                                                 else
                                                                                                 {
-                                                                                                 
-                                                                                                
-                                                                                                        for (int n = 1; n < 7; n++)
+
+
+                                                                                                    for (int n = 1; n < 7; n++)
+                                                                                                    {
+                                                                                                        input7 = n;
+                                                                                                        solutionInts[12] = n;
+
+                                                                                                        for (int o = 1; o < 7; o++)
                                                                                                         {
-                                                                                                            input7 = n;
-                                                                                                            solutionInts[12] = n;
+                                                                                                            input2Validity = checkIfInputValid(o, n);
 
-                                                                                                            for (int o = 1; o < 7; o++)
+                                                                                                            if (input2Validity)
                                                                                                             {
-                                                                                                                input2Validity = checkIfInputValid(o, n);
+                                                                                                                solutionInts[13] = o;
+                                                                                                                input8 = o;
 
-                                                                                                                if (input2Validity)
+                                                                                                                for (int p = 1; p < 7; p++)
                                                                                                                 {
-                                                                                                                    solutionInts[13] = o;
-                                                                                                                    input8 = o;
+                                                                                                                    input3Validity = checkIfInputValid(p, n, o);
 
-                                                                                                                    for (int p = 1; p < 7; p++)
+                                                                                                                    if (input3Validity)
                                                                                                                     {
-                                                                                                                        input3Validity = checkIfInputValid(p, n, o);
-
-                                                                                                                        if (input3Validity)
+                                                                                                                        input9 = p;
+                                                                                                                        solutionInts[14] = p;
+                                                                                                                        if (cubes.Count == 5)
                                                                                                                         {
-                                                                                                                            input9 = p;
-                                                                                                                            solutionInts[14] = p;
-                                                                                                                            if (cubes.Count == 5)
-                                                                                                                            {
-                                                                                                                                //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
-                                                                                                                                solvedLevel = InputTestSolution(solutionInts);
-                                                                                                                                bool testSolution = InputTestSolution(solutionInts);
-                                                                                                                                if (testSolution) return;
+                                                                                                                            //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                                                                            solvedLevel = InputTestSolution(solutionInts);
+                                                                                                                            bool testSolution = InputTestSolution(solutionInts);
+                                                                                                                            if (testSolution) return;
 
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+
+
+                                                                                                                            for (int q = 1; q < 7; q++)
+                                                                                                                            {
+                                                                                                                                input7 = q;
+                                                                                                                                solutionInts[15] = q;
+
+                                                                                                                                for (int r = 1; r < 7; r++)
+                                                                                                                                {
+                                                                                                                                    input2Validity = checkIfInputValid(r, q);
+
+                                                                                                                                    if (input2Validity)
+                                                                                                                                    {
+                                                                                                                                        solutionInts[16] = r;
+                                                                                                                                        input8 = r;
+
+                                                                                                                                        for (int s = 1; s < 7; s++)
+                                                                                                                                        {
+                                                                                                                                            input3Validity = checkIfInputValid(s, q, r);
+
+                                                                                                                                            if (input3Validity)
+                                                                                                                                            {
+                                                                                                                                                input9 = s;
+                                                                                                                                                solutionInts[17] = s;
+                                                                                                                                                if (cubes.Count == 6)
+                                                                                                                                                {
+                                                                                                                                                    //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                                                                                                    solvedLevel = InputTestSolution(solutionInts);
+                                                                                                                                                    bool testSolution = InputTestSolution(solutionInts);
+                                                                                                                                                    if (testSolution) return;
+
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+
+
+                                                                                                                                                for (int t = 1; t < 7; t++)
+                                                                                                                                                {
+                                                                                                                                                    input7 = t;
+                                                                                                                                                    solutionInts[18] = t;
+
+                                                                                                                                                    for (int u = 1; u < 7; u++)
+                                                                                                                                                    {
+                                                                                                                                                        input2Validity = checkIfInputValid(u, t);
+
+                                                                                                                                                        if (input2Validity)
+                                                                                                                                                        {
+                                                                                                                                                            solutionInts[19] = u;
+                                                                                                                                                            input8 = u;
+
+                                                                                                                                                            for (int v = 1; v < 7; v++)
+                                                                                                                                                            {
+                                                                                                                                                                input3Validity = checkIfInputValid(v, t, u);
+
+                                                                                                                                                                if (input3Validity)
+                                                                                                                                                                {
+                                                                                                                                                                    input9 = v;
+                                                                                                                                                                    solutionInts[20] = v;
+                                                                                                                                                                    if (cubes.Count == 7)
+                                                                                                                                                                    {
+                                                                                                                                                                        //Debug.Log("Valid Combination: " + input1 + "," + input2 + "," + input3 + " 2: " + input4 + "," + input5 + "," + input6);
+                                                                                                                                                                        solvedLevel = InputTestSolution(solutionInts);
+                                                                                                                                                                        bool testSolution = InputTestSolution(solutionInts);
+                                                                                                                                                                        if (testSolution) return;
+
+                                                                                                                                                                    }
+                                                                                                                                                                }
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                    }
+                                                                                                                                                }
+
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                }
                                                                                                                             }
+
                                                                                                                         }
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
                                                                                                         }
-                                                                                                    
+                                                                                                    }
+
                                                                                                 }
                                                                                             }
                                                                                         }
@@ -274,7 +357,10 @@ public class LevelSolver : MonoBehaviour
                 }
             }
         }
-
+        if (!validCombination)
+        {
+            randomLevelCreator.LevelGenerator(solutionInts.Count / 3, sidesSamePos);
+        }
 
 
         Debug.Log("Este nivel no se puede resolver");
@@ -502,7 +588,7 @@ public class LevelSolver : MonoBehaviour
                 {
                     solutionInts[1 + 3 * iterations] = j;
 
-                    for (int k = 0; k <7; k++)
+                    for (int k = 0; k < 7; k++)
                     {
                         bool input3Validity = checkIfInputValid(k, i, j);
 
@@ -560,6 +646,7 @@ public class LevelSolver : MonoBehaviour
             return false;
         }
         return true;
+
     }
     public bool InputTestSolution(int c1s1, int c1s2, int c1s3, int c2s1, int c2s2, int c2s3, int c3s1, int c3s2, int c3s3)
     {
@@ -595,6 +682,7 @@ public class LevelSolver : MonoBehaviour
         {
             return false;
         }
+        validCombination = true;
         return true;
     }
 
