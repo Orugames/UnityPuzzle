@@ -258,7 +258,8 @@ public class CubeSide : MonoBehaviour
     {
         if (markerSentToColor.GetComponent<SpriteRenderer>().color != originalColor)
         {
-            markerSentToColor.GetComponent<SpriteRenderer>().color += cubeParentColorSent; //we add the colors together
+            //markerSentToColor.GetComponent<SpriteRenderer>().color += cubeParentColorSent; //we add the colors together
+            markerSentToColor.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
         }
         else markerSentToColor.GetComponent<SpriteRenderer>().color = cubeParentColorSent;
     }

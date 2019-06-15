@@ -16,7 +16,12 @@ public class Cube : MonoBehaviour
     public int prefabNum;
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
-    public List<Color> presetColors = new List<Color> { Color.red, Color.blue,  Color.green, new Color (255,255,0), new Color(255, 102, 0), new Color(102, 0, 255) }; // yellow, orange and purple
+    public List<Color> presetColors = new List<Color> { new Color(255, 248, 61), new Color(182, 255, 61),
+                                                        new Color (70,255,61), new Color(61, 255, 163), new Color(61, 255, 233),
+                                                        new Color (61,126,255), new Color(107, 61, 255), new Color(175, 61, 255),
+                                                        new Color (255,61,247), new Color(255, 61, 70), new Color(255, 149, 61)};
+
+    //FFF83D B6FF3D 46FF3D 3DFFA3 3DFFE9  3D7EFF 6B3DFF AF3DFF FF3DF7 FF3D46 FF953D
     public markers chosenMarker = markers.top;
     public int chosenMarkerNumber = 0;
 

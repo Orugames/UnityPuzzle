@@ -129,7 +129,7 @@ public class RandomLevelCreator : MonoBehaviour
 
         foreach (CubeSide side in cubeSidesCreated)
         {
-            if (side.transform.position.x < -2 || side.transform.position.x > 2 || side.transform.position.y < -5 || side.transform.position.y > 5)
+            if (side.transform.position.x < -3 || side.transform.position.x > 3 || side.transform.position.y < -6 || side.transform.position.y > 6)
             {
                 return LevelGenerator(nCubes, nSamePos);
             }
@@ -144,7 +144,7 @@ public class RandomLevelCreator : MonoBehaviour
     {
         foreach (CubeSide side in cubeSidesCreated)
         {
-            if (side.transform.position.x < -2)
+            if (side.transform.position.x < -3)
             {
                 foreach (GameObject cube in cubesCreatedGO)
                 {
@@ -154,7 +154,7 @@ public class RandomLevelCreator : MonoBehaviour
         }
         foreach (CubeSide side in cubeSidesCreated)
         {
-            if (side.transform.position.x > 2)
+            if (side.transform.position.x > 3)
             {
                 foreach (GameObject cube in cubesCreatedGO)
                 {
@@ -164,7 +164,7 @@ public class RandomLevelCreator : MonoBehaviour
         }
         foreach (CubeSide side in cubeSidesCreated)
         {
-            if (side.transform.position.y > 5)
+            if (side.transform.position.y > 6)
             {
                 foreach (GameObject cube in cubesCreatedGO)
                 {
@@ -174,7 +174,7 @@ public class RandomLevelCreator : MonoBehaviour
         }
         foreach (CubeSide side in cubeSidesCreated)
         {
-            if (side.transform.position.y < -5)
+            if (side.transform.position.y < -6)
             {
                 foreach (GameObject cube in cubesCreatedGO)
                 {
