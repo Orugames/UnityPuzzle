@@ -15,6 +15,7 @@ public class LobbyLogic : MonoBehaviour
     public GameObject gridParent;
     public GameObject buttonPrefab;
     public List<GameObject> levelsButtons = new List<GameObject>();
+
     void Start()
     {
         levelsButtons.Clear();
@@ -48,17 +49,6 @@ public class LobbyLogic : MonoBehaviour
             Sprite sprite = Sprite.Create(levelImageText, rect, Vector2.zero, 1000);
 
             levelSelectionButton.transform.GetChild(2).GetComponent<Image>().sprite = sprite;
-            /*if (ES3.KeyExists("CameraScreenshotLevel" + (i+1) + ".png"))
-            {
-                Debug.Log("existe esto");
-                //Texture2D levelImageText = ES3.LoadImage("CameraScreenshotLevel" + i + ".png");
-                Rect rect = new Rect(0, 0, 1000, 1000);
-                Sprite sprite = Sprite.Create(levelImageText, rect, Vector2.zero, 1000);
-
-                levelSelectionButton.transform.GetChild(2).GetComponent<Image>().sprite = sprite;
-
-            }*/
-
 
             deleteButton.onClick.AddListener(delegate () { UpdateSaveLevels(x); }); //BUG of delegates
 
@@ -73,6 +63,7 @@ public class LobbyLogic : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
     public void LoadCreatedLevel(int levelNumber)
     {
         Debug.Log("Load level " + levelNumber);

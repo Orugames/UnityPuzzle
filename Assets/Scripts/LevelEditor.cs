@@ -427,6 +427,10 @@ public class LevelEditor : MonoBehaviour
 
                 if (distance < 0.1f)
                 {
+                    if(cubeSides[i].cubeParent.chosenMarker == cubeSides[k].cubeParent.chosenMarker) //if the combined sides have the same side coloured
+                    {
+                        cubeSides[k].cubeParent.RandomChosenMarker();
+                    }
                     Debug.Log("Found duplicate, change to two combined ones");
                     Debug.Log(cubeSides[i].name);
                     Debug.Log(cubeSides[k].name);

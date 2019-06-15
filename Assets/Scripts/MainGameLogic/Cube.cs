@@ -16,7 +16,7 @@ public class Cube : MonoBehaviour
     public int prefabNum;
     public List<CubeSide> cubeSides = new List<CubeSide>();
     public List<int> cubeSidesNumbers = new List<int>();
-    public List<Color> presetColors = new List<Color> { Color.red, Color.blue,  Color.green };
+    public List<Color> presetColors = new List<Color> { Color.red, Color.blue,  Color.green, new Color (255,255,0), new Color(255, 102, 0), new Color(102, 0, 255) }; // yellow, orange and purple
     public markers chosenMarker = markers.top;
     public int chosenMarkerNumber = 0;
 
@@ -47,7 +47,7 @@ public class Cube : MonoBehaviour
         {
             color = new Color();
 
-            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)] ;
+            color = presetColors[UnityEngine.Random.Range(0, presetColors.Count)];
         }
     }
 
@@ -85,7 +85,7 @@ public class Cube : MonoBehaviour
 
     }
 
-    private void RandomChosenMarker()
+    public void RandomChosenMarker()
     {
         int randMarkerInt = UnityEngine.Random.Range(1, 5);
         switch (randMarkerInt)

@@ -65,14 +65,6 @@ public class SaveAndLoad : MonoBehaviour
     {
         cubeContainer = GameObject.Find("CubeContainer");
         int currentLevel = levelSelection;
-        /*if (ES3.KeyExists("MaxLevelsCreated"))
-        {
-            currentLevel = ES3.Load<int>("MaxLevelsCreated");
-        }
-        else
-        {
-            ES3.Save<int>("MaxLevelsCreated", currentLevel = 0);
-        }*/
 
         int nCubes = ES3.Load<int>("NumberCubesLevel" + currentLevel);
 

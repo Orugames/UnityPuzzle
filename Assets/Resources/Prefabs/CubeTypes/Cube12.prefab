@@ -62,6 +62,9 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.4, b: 0, a: 1}
+  - {r: 0.4, g: 0, b: 1, a: 1}
   chosenMarker: 0
   chosenMarkerNumber: 0
   side1Solver: {fileID: 2004059751230753346}
