@@ -44,6 +44,7 @@ public class ScreenshotHandler : MonoBehaviour
     }
     public static void TakeScreenshot_Static(int width, int height, int level)
     {
+        Debug.Log(level);
         currentLevel = level;
         instance.TakeScreenshot(width, height, level);
     }

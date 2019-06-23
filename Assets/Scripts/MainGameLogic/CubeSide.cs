@@ -18,10 +18,14 @@ public class CubeSide : MonoBehaviour
     public TextMeshPro posText;
     public Vector2 position;
     public Color cubeSideOwnColor;
+
     public GameObject markerTop;
     public GameObject markerLeft;
     public GameObject markerRight;
     public GameObject markerDown;
+
+    public Dictionary<GameObject, Color> markersPainted = new Dictionary<GameObject, Color>();
+
     public GameObject correctCubeDot;
     public GameObject spriteParent;
     public bool fixedNumber;
@@ -102,15 +106,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         markerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if(!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeSideOwnColor);
                         break;
                     case 1:
                         markerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeSideOwnColor);
                         break;
                     case 2:
                         markerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeSideOwnColor);
                         break;
                     case 3:
                         markerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeSideOwnColor);
                         break;
                 }
                 break;
@@ -120,15 +128,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         markerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeSideOwnColor);
                         break;
                     case 1:
                         markerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeSideOwnColor);
                         break;
                     case 2:
                         markerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeSideOwnColor);
                         break;
                     case 3:
                         markerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeSideOwnColor);
                         break;
                 }
                 break;
@@ -138,15 +150,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         markerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeSideOwnColor);
                         break;
                     case 1:
                         markerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeSideOwnColor);
                         break;
                     case 2:
                         markerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeSideOwnColor);
                         break;
                     case 3:
                         markerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeSideOwnColor);
                         break;
                 }
                 break;
@@ -157,15 +173,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         markerRight.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeSideOwnColor);
                         break;
                     case 1:
                         markerTop.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeSideOwnColor);
                         break;
                     case 2:
                         markerLeft.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeSideOwnColor);
                         break;
                     case 3:
                         markerDown.GetComponent<SpriteRenderer>().color = cubeSideOwnColor;
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeSideOwnColor);
                         break;
                 }
                 break;
@@ -184,15 +204,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         ColorMarkerCombined(cubeParentColorSent, markerTop);
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeParentColorSent);
                         break;
                     case 1:
                         ColorMarkerCombined(cubeParentColorSent, markerLeft);
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeParentColorSent);
                         break;
                     case 2:
                         ColorMarkerCombined(cubeParentColorSent, markerDown);
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeParentColorSent);
                         break;
                     case 3:
                         ColorMarkerCombined(cubeParentColorSent, markerRight);
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeParentColorSent);
                         break;
                 }
                 break;
@@ -202,15 +226,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         ColorMarkerCombined(cubeParentColorSent, markerLeft);
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeParentColorSent);
                         break;
                     case 1:
                         ColorMarkerCombined(cubeParentColorSent, markerDown);
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeParentColorSent);
                         break;
                     case 2:
                         ColorMarkerCombined(cubeParentColorSent, markerRight);
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeParentColorSent);
                         break;
                     case 3:
                         ColorMarkerCombined(cubeParentColorSent, markerTop);
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeParentColorSent);
                         break;
                 }
                 break;
@@ -220,15 +248,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         ColorMarkerCombined(cubeParentColorSent, markerDown);
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeParentColorSent);
                         break;
                     case 1:
                         ColorMarkerCombined(cubeParentColorSent, markerRight);
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeParentColorSent);
                         break;
                     case 2:
                         ColorMarkerCombined(cubeParentColorSent, markerTop);
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeParentColorSent);
                         break;
                     case 3:
                         ColorMarkerCombined(cubeParentColorSent, markerLeft);
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeParentColorSent);
                         break;
                 }
                 break;
@@ -238,15 +270,19 @@ public class CubeSide : MonoBehaviour
                 {
                     case 0:
                         ColorMarkerCombined(cubeParentColorSent, markerRight);
+                        if (!markersPainted.ContainsKey(markerRight)) markersPainted.Add(markerRight, cubeParentColorSent);
                         break;
                     case 1:
                         ColorMarkerCombined(cubeParentColorSent, markerTop);
+                        if (!markersPainted.ContainsKey(markerTop)) markersPainted.Add(markerTop, cubeParentColorSent);
                         break;
                     case 2:
                         ColorMarkerCombined(cubeParentColorSent, markerLeft);
+                        if (!markersPainted.ContainsKey(markerLeft)) markersPainted.Add(markerLeft, cubeParentColorSent);
                         break;
                     case 3:
                         ColorMarkerCombined(cubeParentColorSent, markerDown);
+                        if (!markersPainted.ContainsKey(markerDown)) markersPainted.Add(markerDown, cubeParentColorSent);
                         break;
                 }
                 break;
@@ -304,7 +340,7 @@ public class CubeSide : MonoBehaviour
         if (fixedNumber)
         {
             //we keep the value but still hide the rest
-            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.white * 0.5f;
+            spriteParent.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(122, 122, 122, 255);
             numberText.color = Color.black;
 
         }

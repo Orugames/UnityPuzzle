@@ -6,7 +6,15 @@ using UnityEngine.UI;
 
 public class ExpandShrinkLevels : MonoBehaviour
 {
+
     public LayoutElement layoutElement;
+
+    public Sprite spriteMenuNormal;
+    public Sprite spriteMenuExpanded;
+
+    public Image headerImage;
+    public LayoutElement headerLayoutElement;
+
     public bool expanded;
     public bool finishedAnim = true;
     public bool smallList;
@@ -21,6 +29,9 @@ public class ExpandShrinkLevels : MonoBehaviour
         if (movement && finishedAnim)
         {
             finishedAnim = false;
+            headerImage.sprite = spriteMenuExpanded;
+            headerLayoutElement.preferredHeight = 70;
+
             if (smallList) layoutElement.DOPreferredSize(new Vector2(570, 200), 0.5f).OnComplete(() =>{
                 finishedAnim = true;
                 expanded = true;
@@ -33,6 +44,9 @@ public class ExpandShrinkLevels : MonoBehaviour
         else if (!movement && finishedAnim)
         {
             finishedAnim = false;
+            headerImage.sprite = spriteMenuNormal;
+            headerLayoutElement.preferredHeight = 86;
+
             layoutElement.DOPreferredSize(new Vector2(570, 0), 0.5f).OnComplete(() => {
                 finishedAnim = true;
                 expanded = false;
